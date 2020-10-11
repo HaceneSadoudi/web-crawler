@@ -4,9 +4,10 @@ package fr.univavignon.ceri.webcrawl;
  * This class is used to launch the game.
  * 
  * @author Abdelhakim RASFI
- * @author Author 2
- * @author Author 3
- * @author Author 4
+ * @author Youssef ABIDAR
+ * @author Imane HACEN 
+ * @author Mohamed KHARCHOUF 
+ * 
  */
 public class Launcher
 {	
