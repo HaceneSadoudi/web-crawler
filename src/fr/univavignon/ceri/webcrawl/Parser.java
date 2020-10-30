@@ -47,49 +47,6 @@ public class Parser {
 		this.body = content;
 	}
 
-	public ArrayList<String> linksOnPage() {
-		ArrayList<String> result = new ArrayList<String>();
-		String globalRegex = "<a (.*?)</a>";
-		Pattern globalPattern = Pattern.compile(globalRegex, Pattern.CASE_INSENSITIVE);
-		Matcher globalMatcher = globalPattern.matcher(this.body);
-		while (globalMatcher.find()) {
-			String regex = "href=\"(.*?)\"";
-			Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-			Matcher m = p.matcher(globalMatcher.group());
-			while (m.find()) {
-				if (m.group(1).length() > 0 && m.group(1).charAt(0) != '#') 
-				{
-					String currentHref = m.group(1);
-					if (currentHref.length() >= 2 && currentHref.substring(0, 2).equals("//")) 
-					{
-						currentHref = this.url.split("//")[0] + m.group(1);
-						result.add(currentHref);
-					} else 
-					{
-						try 
-						{
-							new URL(currentHref);
-							result.add(m.group(1));
-						} 
-						catch (MalformedURLException malformedURLException) 
-						{
-							URL url = null;
-							try {
-								url = new URL(new URL(this.url), currentHref);
-								result.add(url.toString());
-							} 
-							catch (MalformedURLException e1) 
-							{
-								// TODO Auto-generated catch block
-							}
-						}
-					}
-
-				}
-			}
-		}
-
-		return result;
-	}
+	
 
 }
