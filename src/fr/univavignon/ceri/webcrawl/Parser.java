@@ -1,8 +1,6 @@
 package fr.univavignon.ceri.webcrawl;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
@@ -11,7 +9,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
