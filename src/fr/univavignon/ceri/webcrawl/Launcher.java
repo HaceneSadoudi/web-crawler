@@ -354,6 +354,48 @@ public class Launcher extends Application{
 			}
 		});
 		
+		// Ajout paramètres avancés
+		
+		param.getChildren().add(label_noeud);
+		param.getChildren().add(noeud);
+		
+		param.getChildren().add(label_limites);
+		param.getChildren().add(line1_limites);
+		param.getChildren().add(line2_limites);
+		param.getChildren().add(line3_limites);
+		param.getChildren().add(line4_limites);
+		param.getChildren().add(line5_limites);
+		
+		param.getChildren().add(label_rayon);
+		param.getChildren().add(rayon);
+		
+		param.getChildren().add(label_temps);
+		param.getChildren().add(label_temps_h);
+		param.getChildren().add(temps_heure);
+		param.getChildren().add(label_temps_m);
+		param.getChildren().add(temps_minute);
+		param.getChildren().add(label_temps_s);
+		param.getChildren().add(temps_seconde);
+		
+		param.getChildren().add(label_domaine);
+		param.getChildren().add(domaine);
+		
+		param.getChildren().add(label_processus);
+		param.getChildren().add(processus);
+		
+		param.getChildren().add(label_robot);
+		param.getChildren().add(robot);
+		
+		param.getChildren().add(label_sitemap);
+		param.getChildren().add(sitemap);
+		
+		param.getChildren().add(label_remontee);
+		param.getChildren().add(remontee);
+		
+		param.getChildren().add(param_button1);
+		param.getChildren().add(param_button2);
+		param.getChildren().add(param_button3);
+		
 		////////////////////////////////////////////////////////////
 				
 		Scene scene1 = new Scene(cibles,450,550);
