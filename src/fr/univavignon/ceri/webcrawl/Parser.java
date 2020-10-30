@@ -36,8 +36,8 @@ public class Parser {
 		try {
 			HttpClient client = HttpClient.newBuilder()
 			        .version(Version.HTTP_1_1)
-			        .followRedirects(Redirect.ALWAYS)
 			        .connectTimeout(Duration.ofSeconds(20))
+			        .followRedirects(Redirect.ALWAYS)
 			        .build();
 			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(this.url)).GET().build();
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
