@@ -4,6 +4,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Redirect;
+import java.net.http.HttpClient.Version;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -28,43 +34,48 @@ public class Parser {
 
 		URLConnection connection = null;
 		try {
-			connection = new URL(this.url).openConnection();
-			Scanner scanner = new Scanner(connection.getInputStream());
-			scanner.useDelimiter("\\Z");
-			content = scanner.next();
-			scanner.close();
+			HttpClient client = HttpClient.newBuilder()
+			        .version(Version.HTTP_1_1)
+			        .followRedirects(Redirect.ALWAYS)
+			        .connectTimeout(Duration.ofSeconds(20))
+			        .build();
+			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(this.url)).GET().build();
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			content = response.body();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		content = content.replace("\n", " ").replace("\r", " ");
 		this.body = content;
 	}
 
 	public ArrayList<String> linksOnPage() {
 		ArrayList<String> result = new ArrayList<String>();
 		String globalRegex = "<a(.*?)</a>";
-		Pattern globalPattern = Pattern.compile(globalRegex);
+		Pattern globalPattern = Pattern.compile(globalRegex, Pattern.CASE_INSENSITIVE);
 		Matcher globalMatcher = globalPattern.matcher(this.body);
 		while (globalMatcher.find()) {
-
 			String regex = "href=\"(.*?)\"";
-			Pattern p = Pattern.compile(regex);
+			Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(globalMatcher.group());
 
 			while (m.find()) {
-				if (m.group(1).charAt(0) != '#') {
+				if (m.group(1).length() > 0 && m.group(1).charAt(0) != '#') {
 
-					if (m.group(1).substring(0, 2).equals("//")) {
+					if (m.group(1).length() >= 2 && m.group(1).substring(0, 2).equals("//")) {
 						result.add(this.url.split("//")[0] + m.group(1));
-						System.out.println(this.url.split("//")[0] + m.group(1));
-					}
-					else if (m.group(1).charAt(0) == '/') {
+						// Printing output for testing purpose
+						//System.out.println(this.url.split("//")[0] + m.group(1));
+					} else if (m.group(1).charAt(0) == '/') {
 						String[] urlParts = this.url.split("/");
 						result.add(urlParts[0] + "//" + urlParts[2] + m.group(1));
-						System.out.println(urlParts[0] + "//"  + urlParts[2] + m.group(1));
+						// Printing output for testing purpose
+						//System.out.println(urlParts[0] + "//" + urlParts[2] + m.group(1));
 					} else {
 						if (m.group(1).substring(0, 4).equals("http")) {
 							result.add(m.group(1));
-							System.out.println(m.group(1));
+							// Printing output for testing purpose
+							//System.out.println(m.group(1));
 						}
 					}
 				}
