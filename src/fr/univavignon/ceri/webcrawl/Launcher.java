@@ -1,11 +1,19 @@
 package fr.univavignon.ceri.webcrawl;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Timer;
 
+import javax.imageio.ImageIO;
+
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -20,9 +28,12 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -509,6 +520,69 @@ public class Launcher extends Application{
 		nb_liens.setFont(f1);
 		nb_liens.setLayoutX(275);
 		nb_liens.setLayoutY(220);
+		
+		// PARTIE 19 et 23
+		
+		Button popup_button = new Button("\nGraphique\n ");
+		popup_button.setLayoutX(320);
+		popup_button.setLayoutY(170);
+		
+		Stage popup = new Stage();
+		Pane pane_graphique = new Pane();
+		Scene scene_graphique = new Scene(pane_graphique,500,400);
+		
+		popup.initModality(Modality.WINDOW_MODAL);
+		popup.setTitle("Graphique");
+		
+		NumberAxis x_temps = new NumberAxis();
+		x_temps.setLabel("temps (en minutes)");
+
+		NumberAxis y_nombre = new NumberAxis();
+		y_nombre.setLabel("nombre");
+		
+		chart = new LineChart(x_temps, y_nombre);
+		
+		g_noeud = new XYChart.Series<Integer, Integer>();
+		g_liens = new XYChart.Series<Integer, Integer>();
+		
+		g_noeud.setName("Noeud");
+		//g_noeud.getData().add(new XYChart.Data<Integer, Integer>(0, 1));
+		
+		g_liens.setName("Liens");
+		//g_liens.getData().add(new XYChart.Data<Integer, Integer>(1, 0));
+		
+		chart.getData().add(g_noeud);
+		chart.getData().add(g_liens);
+		
+		pane_graphique.getChildren().add(chart);
+		
+		popup.setScene(scene_graphique);
+		popup.sizeToScene();
+		popup.setResizable(false);
+
+		
+		popup_button.setOnAction(e -> {			
+			popup.show();
+		});
+		
+		chart.setOnMouseClicked(e -> {
+			MouseButton button = e.getButton();
+            
+			if(button == MouseButton.SECONDARY){
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYYY_MM_dd_HH_mm_ss");  
+				LocalDateTime now = LocalDateTime.now();
+				
+				WritableImage image = scene_graphique.snapshot(null);
+				
+				File fichier = new File(dtf.format(now) + ".png");
+				try {
+					ImageIO.write(SwingFXUtils.fromFXImage(image, null), "PNG", fichier);
+				} catch (IOException e1){
+					e1.printStackTrace();
+				}
+            }
+		});
+					
 		
 		////////////////////////////////////////////////////////////
 				
