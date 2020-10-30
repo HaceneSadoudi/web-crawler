@@ -28,11 +28,6 @@ public class Arc {
 		
 	}
 	
-	public void connect() {
-		//this.source.successor.add(target);
-		this.target.predecessor=source;
-		target.setUrl(link);	
-	}
 
 	public String getLink() {
 		return link;

@@ -1,5 +1,7 @@
 package fr.univavignon.ceri.webcrawl;
 
+import java.util.ArrayList;
+
 /**
  * This class is used to launch the game.
  * 
@@ -20,10 +22,10 @@ public class Launcher
 	
 	public static void main(String[] args)
 	{	//TODO to be completed
-		
+
 		//main test graphe.
 		ArrayList<String> tabUrl=new ArrayList<String>();
-		Graphh graph=new Graphh("https://www.nytimes.com");
+		Graph graph=new Graph("https://youtube.com");
 		graph.graphSite(tabUrl);
 	}
 }
