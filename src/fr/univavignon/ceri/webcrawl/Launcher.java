@@ -486,6 +486,30 @@ public class Launcher extends Application{
 		line5_graphe.setEndX(30);
 		line5_graphe.setEndY(130);
 		
+		// PARTIE 17
+		
+		Label label_nb_noeud = new Label("Nombre de noeuds :");
+		label_nb_noeud.setFont(f1);
+		label_nb_noeud.setLayoutX(50);
+		label_nb_noeud.setLayoutY(170);
+		
+		nb_noeuds = new Label("" + nb_n);
+		nb_noeuds.setFont(f1);
+		nb_noeuds.setLayoutX(275);
+		nb_noeuds.setLayoutY(170);
+		
+		// PARTIE 18
+		
+		Label label_nb_lien = new Label("Nombre de liens :");
+		label_nb_lien.setFont(f1);
+		label_nb_lien.setLayoutX(50);
+		label_nb_lien.setLayoutY(220);
+		
+		nb_liens = new Label("" + nb_l);
+		nb_liens.setFont(f1);
+		nb_liens.setLayoutX(275);
+		nb_liens.setLayoutY(220);
+		
 		////////////////////////////////////////////////////////////
 				
 		Scene scene1 = new Scene(cibles,450,550);
