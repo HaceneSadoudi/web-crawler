@@ -30,8 +30,6 @@ public class Parser {
 	public Parser(String _url) {
 		this.url = _url;
 		String content = null;
-
-		URLConnection connection = null;
 		try {
 			HttpClient client = HttpClient.newBuilder()
 					.version(Version.HTTP_1_1)
