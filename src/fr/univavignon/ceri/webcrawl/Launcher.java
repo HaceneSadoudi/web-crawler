@@ -1,15 +1,20 @@
 package fr.univavignon.ceri.webcrawl;
 
 import java.util.Optional;
+import java.util.Timer;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextInputDialog;
@@ -37,9 +42,31 @@ public class Launcher extends Application{
 	 * 		Not used here.
 	 */
 	
+	Timer timer = new Timer();
+	int hE = 0, mE = 0, sE = 0;
+	int hR = 0, mR = 0, sR = 0;
+	boolean control_temps;
+	
+	ProgressBar prog1;
+	ProgressIndicator prog2;
+	int prog_num = 0, prog_den;
+	
+	Label temps_ecoule;
+	Label temps_restant;
 	Button demarrer_button3;
 	
+	Label nb_threads;
+	Label nb_URL;
+	Label nb_noeuds;
+	Label nb_liens;
+	
 	Spinner<Integer> temps_heure, temps_minute, temps_seconde;
+	
+	LineChart chart;
+	XYChart.Series<Integer, Integer> g_noeud;
+	XYChart.Series<Integer, Integer> g_liens;
+	int g_n = 2, g_l = 2, nb_n = 0, nb_l = 0;
+	int nb_t = 0, nb_u = 1;
 	
 	@Override
 	public void start(Stage primaryStage){
@@ -395,6 +422,20 @@ public class Launcher extends Application{
 		param.getChildren().add(param_button1);
 		param.getChildren().add(param_button2);
 		param.getChildren().add(param_button3);
+		
+		/////////////////// DEMARRER ///////////////////
+				
+		// PARTIE 15
+		
+		Label label_nb_threads = new Label("Nombre de threads :");
+		label_nb_threads.setFont(f1);
+		label_nb_threads.setLayoutX(50);
+		label_nb_threads.setLayoutY(20);
+		
+		nb_threads = new Label("" + nb_t);
+		nb_threads.setFont(f1);
+		nb_threads.setLayoutX(275);
+		nb_threads.setLayoutY(20);
 		
 		////////////////////////////////////////////////////////////
 				
