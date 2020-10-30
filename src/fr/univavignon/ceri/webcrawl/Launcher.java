@@ -449,6 +449,43 @@ public class Launcher extends Application{
 		nb_URL.setLayoutX(275);
 		nb_URL.setLayoutY(70);
 		
+		// GRAPHE
+		
+		Label label_graphe = new Label("Graphe");
+		label_graphe.setFont(f2);
+		label_graphe.setLayoutX(100);
+		label_graphe.setLayoutY(120);
+		
+		Line line1_graphe = new Line();
+		line1_graphe.setStartX(30);
+		line1_graphe.setStartY(130); 
+		line1_graphe.setEndX(30);
+		line1_graphe.setEndY(260);
+		
+		Line line2_graphe = new Line();
+		line2_graphe.setStartX(30);
+		line2_graphe.setStartY(260); 
+		line2_graphe.setEndX(420);
+		line2_graphe.setEndY(260);
+		
+		Line line3_graphe = new Line();
+		line3_graphe.setStartX(420);
+		line3_graphe.setStartY(260); 
+		line3_graphe.setEndX(420);
+		line3_graphe.setEndY(130);
+		
+		Line line4_graphe = new Line();
+		line4_graphe.setStartX(420);
+		line4_graphe.setStartY(130); 
+		line4_graphe.setEndX(185);
+		line4_graphe.setEndY(130);
+		
+		Line line5_graphe = new Line();
+		line5_graphe.setStartX(80);
+		line5_graphe.setStartY(130);
+		line5_graphe.setEndX(30);
+		line5_graphe.setEndY(130);
+		
 		////////////////////////////////////////////////////////////
 				
 		Scene scene1 = new Scene(cibles,450,550);
