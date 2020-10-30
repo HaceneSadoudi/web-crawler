@@ -1,6 +1,9 @@
 package fr.univavignon.ceri.webcrawl;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
@@ -31,11 +34,8 @@ public class Parser {
 
 		URLConnection connection = null;
 		try {
-			HttpClient client = HttpClient.newBuilder()
-			        .version(Version.HTTP_1_1)
-			        .connectTimeout(Duration.ofSeconds(20))
-			        .followRedirects(Redirect.ALWAYS)
-			        .build();
+			HttpClient client = HttpClient.newBuilder().version(Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(20))
+					.followRedirects(Redirect.ALWAYS).build();
 			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(this.url)).GET().build();
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			content = response.body();
@@ -48,7 +48,7 @@ public class Parser {
 
 	public ArrayList<String> linksOnPage() {
 		ArrayList<String> result = new ArrayList<String>();
-		String globalRegex = "<a(.*?)</a>";
+		String globalRegex = "<a (.*?)</a>";
 		Pattern globalPattern = Pattern.compile(globalRegex, Pattern.CASE_INSENSITIVE);
 		Matcher globalMatcher = globalPattern.matcher(this.body);
 		while (globalMatcher.find()) {
@@ -57,17 +57,25 @@ public class Parser {
 			Matcher m = p.matcher(globalMatcher.group());
 			while (m.find()) {
 				if (m.group(1).length() > 0 && m.group(1).charAt(0) != '#') {
-
-					if (m.group(1).length() >= 2 && m.group(1).substring(0, 2).equals("//")) {
-						result.add(this.url.split("//")[0] + m.group(1));
-					} else if (m.group(1).charAt(0) == '/') {
-						String[] urlParts = this.url.split("/");
-						result.add(urlParts[0] + "//" + urlParts[2] + m.group(1));
+					String currentHref = m.group(1);
+					if (currentHref.length() >= 2 && currentHref.substring(0, 2).equals("//")) {
+						currentHref = this.url.split("//")[0] + m.group(1);
+						result.add(currentHref);
 					} else {
-						if (m.group(1).substring(0, 4).equals("http")) {
+						try {
+							new URL(currentHref);
 							result.add(m.group(1));
+						} catch (MalformedURLException malformedURLException) {
+							URL url = null;
+							try {
+								url = new URL(new URL(this.url), currentHref);
+								result.add(url.toString());
+							} catch (MalformedURLException e1) {
+								// TODO Auto-generated catch block
+							}
 						}
 					}
+
 				}
 			}
 		}
