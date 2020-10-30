@@ -437,6 +437,18 @@ public class Launcher extends Application{
 		nb_threads.setLayoutX(275);
 		nb_threads.setLayoutY(20);
 		
+		// PARTIE 16
+		
+		Label label_nb_URL = new Label("Nombre d'URL traités :");
+		label_nb_URL.setFont(f1);
+		label_nb_URL.setLayoutX(50);
+		label_nb_URL.setLayoutY(70);
+		
+		nb_URL = new Label("" + nb_u);
+		nb_URL.setFont(f1);
+		nb_URL.setLayoutX(275);
+		nb_URL.setLayoutY(70);
+		
 		////////////////////////////////////////////////////////////
 				
 		Scene scene1 = new Scene(cibles,450,550);
