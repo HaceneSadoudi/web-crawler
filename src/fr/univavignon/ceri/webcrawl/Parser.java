@@ -33,9 +33,14 @@ public class Parser {
 
 		URLConnection connection = null;
 		try {
-			HttpClient client = HttpClient.newBuilder().version(Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(20))
-					.followRedirects(Redirect.ALWAYS).build();
-			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(this.url)).GET().build();
+			HttpClient client = HttpClient.newBuilder()
+					.version(Version.HTTP_1_1)
+					.connectTimeout(Duration.ofSeconds(20))
+					.followRedirects(Redirect.ALWAYS)
+					.build();
+			HttpRequest request = HttpRequest.newBuilder()
+					.uri(URI.create(this.url))
+					.GET().build();
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			content = response.body();
 		} catch (Exception ex) {
@@ -55,21 +60,29 @@ public class Parser {
 			Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(globalMatcher.group());
 			while (m.find()) {
-				if (m.group(1).length() > 0 && m.group(1).charAt(0) != '#') {
+				if (m.group(1).length() > 0 && m.group(1).charAt(0) != '#') 
+				{
 					String currentHref = m.group(1);
-					if (currentHref.length() >= 2 && currentHref.substring(0, 2).equals("//")) {
+					if (currentHref.length() >= 2 && currentHref.substring(0, 2).equals("//")) 
+					{
 						currentHref = this.url.split("//")[0] + m.group(1);
 						result.add(currentHref);
-					} else {
-						try {
+					} else 
+					{
+						try 
+						{
 							new URL(currentHref);
 							result.add(m.group(1));
-						} catch (MalformedURLException malformedURLException) {
+						} 
+						catch (MalformedURLException malformedURLException) 
+						{
 							URL url = null;
 							try {
 								url = new URL(new URL(this.url), currentHref);
 								result.add(url.toString());
-							} catch (MalformedURLException e1) {
+							} 
+							catch (MalformedURLException e1) 
+							{
 								// TODO Auto-generated catch block
 							}
 						}
