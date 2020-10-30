@@ -52,30 +52,23 @@ public class Parser {
 	public ArrayList<String> linksOnPage() {
 		ArrayList<String> result = new ArrayList<String>();
 		String globalRegex = "<a(.*?)</a>";
-		Pattern globalPattern = Pattern.compile(globalRegex, Pattern.CASE_INSENSITIVE);
+		Pattern globalPattern = Pattern.compile(globalRegex);
 		Matcher globalMatcher = globalPattern.matcher(this.body);
 		while (globalMatcher.find()) {
 			String regex = "href=\"(.*?)\"";
-			Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+			Pattern p = Pattern.compile(regex);
 			Matcher m = p.matcher(globalMatcher.group());
-
 			while (m.find()) {
 				if (m.group(1).length() > 0 && m.group(1).charAt(0) != '#') {
 
 					if (m.group(1).length() >= 2 && m.group(1).substring(0, 2).equals("//")) {
 						result.add(this.url.split("//")[0] + m.group(1));
-						// Printing output for testing purpose
-						//System.out.println(this.url.split("//")[0] + m.group(1));
 					} else if (m.group(1).charAt(0) == '/') {
 						String[] urlParts = this.url.split("/");
 						result.add(urlParts[0] + "//" + urlParts[2] + m.group(1));
-						// Printing output for testing purpose
-						//System.out.println(urlParts[0] + "//" + urlParts[2] + m.group(1));
 					} else {
 						if (m.group(1).substring(0, 4).equals("http")) {
 							result.add(m.group(1));
-							// Printing output for testing purpose
-							//System.out.println(m.group(1));
 						}
 					}
 				}
