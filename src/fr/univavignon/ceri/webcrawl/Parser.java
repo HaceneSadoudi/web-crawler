@@ -52,11 +52,11 @@ public class Parser {
 	public ArrayList<String> linksOnPage() {
 		ArrayList<String> result = new ArrayList<String>();
 		String globalRegex = "<a(.*?)</a>";
-		Pattern globalPattern = Pattern.compile(globalRegex);
+		Pattern globalPattern = Pattern.compile(globalRegex, Pattern.CASE_INSENSITIVE);
 		Matcher globalMatcher = globalPattern.matcher(this.body);
 		while (globalMatcher.find()) {
 			String regex = "href=\"(.*?)\"";
-			Pattern p = Pattern.compile(regex);
+			Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(globalMatcher.group());
 			while (m.find()) {
 				if (m.group(1).length() > 0 && m.group(1).charAt(0) != '#') {
