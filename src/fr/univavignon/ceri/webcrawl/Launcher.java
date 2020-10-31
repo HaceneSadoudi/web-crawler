@@ -621,6 +621,30 @@ public class Launcher extends Application{
 		line5_temps.setEndY(290);
 					
 		
+		// PARTIE 20
+		
+		Label label_temps_ecoule = new Label("Temps écoulé :");
+		label_temps_ecoule.setFont(f1);
+		label_temps_ecoule.setLayoutX(50);
+		label_temps_ecoule.setLayoutY(330);
+		
+		temps_ecoule = new Label(hE + "h " + mE + "m " + sE + "s");
+		temps_ecoule.setFont(f1);
+		temps_ecoule.setLayoutX(200);
+		temps_ecoule.setLayoutY(330);
+		
+		// PARTIE 21
+		
+		Label label_temps_restant = new Label("Temps restant :");
+		label_temps_restant.setFont(f1);
+		label_temps_restant.setLayoutX(50);
+		label_temps_restant.setLayoutY(380);
+		
+		temps_restant = new Label(hR + "h " + mR + "m " + sR + "s");
+		temps_restant.setFont(f1);
+		temps_restant.setLayoutX(200);
+		temps_restant.setLayoutY(380);
+		
 		////////////////////////////////////////////////////////////
 				
 		Scene scene1 = new Scene(cibles,450,550);
