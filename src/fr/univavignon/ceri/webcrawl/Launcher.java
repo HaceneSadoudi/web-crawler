@@ -645,6 +645,17 @@ public class Launcher extends Application{
 		temps_restant.setLayoutX(200);
 		temps_restant.setLayoutY(380);
 		
+		// PARTIE 22
+		
+		prog1 = new ProgressBar();
+		prog1.setPrefSize(300, 30);
+		prog1.setLayoutX(50);
+		prog1.setLayoutY(450);
+		
+		prog2 = new ProgressIndicator(0); 
+		prog2.setLayoutX(370);
+		prog2.setLayoutY(450);
+		
 		////////////////////////////////////////////////////////////
 				
 		Scene scene1 = new Scene(cibles,450,550);
