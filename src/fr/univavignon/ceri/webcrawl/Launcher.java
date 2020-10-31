@@ -704,9 +704,72 @@ public class Launcher extends Application{
 		Scene scene2 = new Scene(param,450,550);
 		Scene scene3 = new Scene(demar,450,550);
 		
+		cibles_button2.setOnAction(e -> {
+			primaryStage.setScene(scene2);
+		});
+		
+		cibles_button3.setOnAction(e -> {
+			primaryStage.setScene(scene3);
+			demarrer_button1.setDisable(true);
+			demarrer_button2.setDisable(true);
+			demarrer_button4.setVisible(false);
+			demarrer_button3.setVisible(true);
+			dem();
+			prog_num = 0;
+			prog1.setProgress(0);
+			prog2.setProgress(0);
+		});
+		
+		param_button1.setOnAction(e -> {
+			primaryStage.setScene(scene1);
+		});
+		
+		param_button3.setOnAction(e -> {
+			primaryStage.setScene(scene3);
+			demarrer_button1.setDisable(true);
+			demarrer_button2.setDisable(true);
+			demarrer_button4.setVisible(false);
+			demarrer_button3.setVisible(true);
+			dem();
+			prog_num = 0;
+			prog1.setProgress(0);
+			prog2.setProgress(0);
+		});
+		
+		demarrer_button1.setOnAction(e -> {
+			primaryStage.setScene(scene1);
+		});
+		
+		demarrer_button2.setOnAction(e -> {
+			primaryStage.setScene(scene2);
+		});
+		
+		demarrer_button3.setOnAction(e -> {
+			demarrer_button3.setVisible(false);
+			demarrer_button4.setVisible(true);
+			demarrer_button1.setDisable(false);
+			demarrer_button2.setDisable(false);
+			timer.cancel();
+		});
+		
+		demarrer_button4.setOnAction(e -> {
+			demarrer_button4.setVisible(false);
+			demarrer_button3.setVisible(true);
+			demarrer_button1.setDisable(true);
+			demarrer_button2.setDisable(true);
+			dem();
+			prog_num = 0;
+			prog1.setProgress(0);
+			prog2.setProgress(0);
+		});
+		
 		primaryStage.setTitle("Crawler");
 		primaryStage.setScene(scene1);
 		primaryStage.show();
+	}
+	
+	public void dem() {
+		
 	}
 	
 	public static void main(String[] args) {
