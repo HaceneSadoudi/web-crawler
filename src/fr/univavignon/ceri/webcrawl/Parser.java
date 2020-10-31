@@ -31,7 +31,6 @@ public class Parser {
 		String content = null;
 		try {
 			HttpClient client = HttpClient.newBuilder()
-					.version(Version.HTTP_1_1)
 					.connectTimeout(Duration.ofSeconds(20))
 					.followRedirects(Redirect.ALWAYS)
 					.build();
@@ -80,7 +79,6 @@ public class Parser {
 							} 
 							catch (MalformedURLException e1) 
 							{
-								// TODO Auto-generated catch block
 							}
 						}
 					}
