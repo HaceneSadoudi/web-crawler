@@ -656,6 +656,48 @@ public class Launcher extends Application{
 		prog2.setLayoutX(370);
 		prog2.setLayoutY(450);
 		
+		// Ajout démarrer
+		
+		demar.getChildren().add(label_nb_threads);
+		demar.getChildren().add(nb_threads);
+		demar.getChildren().add(label_nb_URL);
+		demar.getChildren().add(nb_URL);
+		
+		demar.getChildren().add(label_graphe);
+		demar.getChildren().add(line1_graphe);
+		demar.getChildren().add(line2_graphe);
+		demar.getChildren().add(line3_graphe);
+		demar.getChildren().add(line4_graphe);
+		demar.getChildren().add(line5_graphe);
+		
+		demar.getChildren().add(label_nb_noeud);
+		demar.getChildren().add(nb_noeuds);
+		demar.getChildren().add(label_nb_lien);
+		demar.getChildren().add(nb_liens);
+		
+		demar.getChildren().add(popup_button);
+		
+		demar.getChildren().add(label_temps_dem);
+		demar.getChildren().add(line1_temps);
+		demar.getChildren().add(line2_temps);
+		demar.getChildren().add(line3_temps);
+		demar.getChildren().add(line4_temps);
+		demar.getChildren().add(line5_temps);
+		
+		demar.getChildren().add(label_temps_ecoule);
+		demar.getChildren().add(temps_ecoule);
+		demar.getChildren().add(temps_restant);
+		
+		demar.getChildren().add(label_temps_restant);
+		
+		demar.getChildren().add(prog1);
+		demar.getChildren().add(prog2);
+		
+		demar.getChildren().add(demarrer_button1);
+		demar.getChildren().add(demarrer_button2);
+		demar.getChildren().add(demarrer_button3);
+		demar.getChildren().add(demarrer_button4);
+		
 		////////////////////////////////////////////////////////////
 				
 		Scene scene1 = new Scene(cibles,450,550);
