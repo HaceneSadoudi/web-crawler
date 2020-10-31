@@ -582,6 +582,43 @@ public class Launcher extends Application{
 				}
             }
 		});
+		
+		// TEMPS
+		
+		Label label_temps_dem = new Label("Temps");
+		label_temps_dem.setFont(f2);
+		label_temps_dem.setLayoutX(100);
+		label_temps_dem.setLayoutY(280);
+		
+		Line line1_temps = new Line();
+		line1_temps.setStartX(30);
+		line1_temps.setStartY(290); 
+		line1_temps.setEndX(30);
+		line1_temps.setEndY(420);
+		
+		Line line2_temps = new Line();
+		line2_temps.setStartX(30);
+		line2_temps.setStartY(420); 
+		line2_temps.setEndX(420);
+		line2_temps.setEndY(420);
+		
+		Line line3_temps = new Line();
+		line3_temps.setStartX(420);
+		line3_temps.setStartY(420); 
+		line3_temps.setEndX(420);
+		line3_temps.setEndY(290);
+		
+		Line line4_temps = new Line();
+		line4_temps.setStartX(420);
+		line4_temps.setStartY(290); 
+		line4_temps.setEndX(180);
+		line4_temps.setEndY(290);
+		
+		Line line5_temps = new Line();
+		line5_temps.setStartX(80);
+		line5_temps.setStartY(290);
+		line5_temps.setEndX(30);
+		line5_temps.setEndY(290);
 					
 		
 		////////////////////////////////////////////////////////////
