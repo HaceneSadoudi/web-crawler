@@ -16,7 +16,7 @@ import org.w3c.dom.Attr;
 
 
 public class createxml {
-public static void main(Graph graphe) {
+public static void creaat(Graph graphe) {
 ArrayList<ArrayList<Arc>> auxArc=graphe.listEnsmbleArc;
 try {
 DocumentBuilderFactory docGraph = DocumentBuilderFactory.newInstance();

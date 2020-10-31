@@ -7,6 +7,6 @@ ArrayList<String> b=new ArrayList<String>();
 Graph g=new Graph("https://www.google.com");
 g.graphSite(b);
 createxml gml= new createxml();
-gml.main(g);
+gml.creaat(g);
 }
 }
