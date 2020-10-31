@@ -2,18 +2,19 @@ package fr.univavignon.ceri.webcrawl;
 
 import java.io.File;
 import java.util.ArrayList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Attr;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.transform.Transformer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Attr;
+
+
 public class createxml {
 public static void main(Graph graphe) {
 ArrayList<ArrayList<Arc>> auxArc=graphe.listEnsmbleArc;
@@ -44,18 +45,17 @@ graph.appendChild(arc);
 }
 //on ajoute l'element graph dans le document gra
 gra.appendChild(graph);
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMSource source = new DOMSource(gra);
+        TransformerFactory transtory = TransformerFactory.newInstance();
+        DOMSource targeet = new DOMSource(gra);
+        Transformer changementexport = transtory.newTransformer();
         //exporter en graphml
-        StreamResult result = new StreamResult(new File("file.graphml"));
-        transformer.transform(source, result);
+        StreamResult graphhml = new StreamResult(new File("GRAPHMLLL.graphml"));
+        changementexport.transform(targeet, graphhml);
 }
 catch (ParserConfigurationException pce) {
         pce.printStackTrace();
 }
 catch (TransformerException tfe) {
-
         tfe.printStackTrace();
  }
 }
