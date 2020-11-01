@@ -1,5 +1,6 @@
 package fr.univavignon.ceri.webcrawl;
 
+
 public class Arc {
 	
 	protected String link;
