@@ -34,8 +34,9 @@ public class Graph {
 	}
 
 	public void essai(ArrayList<String> ti) {
-		Parser ps = new Parser(this.unSommet.getUrl());
-		this.tableauUrl= ps.linksOnPage();
+		//Parser ps = new Parser(this.unSommet.getUrl());
+		//this.tableauUrl= ps.linksOnPage();
+		this.tableauUrl=search(this.unSommet.getUrl());
 		this.listSommet.add(this.unSommet);
 		for (int i=0;i<this.tableauUrl.size();i++) {
 			Sommet b=new Sommet(this.tableauUrl.get(i));
@@ -132,8 +133,9 @@ public class Graph {
 	Sommet aux;
 	
 	public void essaiDomain(ArrayList<String> ti) {
-		Parser ps = new Parser(this.unSommet.getUrl());
-		this.tableauUrl= ps.linksOnPage();
+		//Parser ps = new Parser(this.unSommet.getUrl());
+		//this.tableauUrl= ps.linksOnPage();
+		this.tableauUrl = search(this.unSommet.getUrl());
 		this.domainI.add(this.unSommet);
 		for (int i=0;i<this.tableauUrl.size();i++) {
 			Sommet b=new Sommet(this.tableauUrl.get(i));
