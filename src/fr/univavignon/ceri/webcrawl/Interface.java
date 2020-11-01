@@ -40,7 +40,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Font;
 
-public class Launcher extends Application {
+public class Interface extends Application {
 	
 	Timer timer = new Timer();
 	int hE = 0, mE = 0, sE = 0;
