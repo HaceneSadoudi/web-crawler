@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 /**
  * This class is used to parse a web page.
  * 
+ * linksOnpage function return an array list of String contains all URLs
+ * 
  * @author Abdelhakim RASFI
  * 
  */
@@ -51,7 +53,7 @@ public class Parser {
 		}
 		// remplacement des retours a la ligne par des espaces pour
 		// utiliser les expressions regulieres qui vont reconnaitre les liens
-		content = content.replace("\n", " ").replace("\r", " ");
+		// content = content.replace("\n", " ").replace("\n\r", " ");
 		this.body = content;
 	}
 
@@ -103,6 +105,7 @@ public class Parser {
 							} 
 							catch (MalformedURLException e1) 
 							{
+								// TODO
 							}
 						}
 					}
