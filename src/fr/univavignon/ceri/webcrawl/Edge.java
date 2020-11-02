@@ -1,15 +1,15 @@
 package fr.univavignon.ceri.webcrawl;
 
 
-public class Arc {
+public class Edge {
 	
 	protected String link;
-	protected Sommet source;
-	protected Sommet target;
+	protected Vertex source;
+	protected Vertex target;
 	protected int ponderation;
 	
 	//si liens
-	public Arc(String link,Sommet source ,Sommet target ) {
+	public Edge(String link,Vertex source ,Vertex target ) {
 		// TODO Auto-generated constructor stub
 		
 		this.link=link;
@@ -19,7 +19,7 @@ public class Arc {
 	}
 	
 	//si domaine
-	public Arc(String link,Sommet source ,Sommet target , int ponderation) {
+	public Edge(String link,Vertex source ,Vertex target , int ponderation) {
 		// TODO Auto-generated constructor stub
 		
 		this.link=link;
@@ -38,19 +38,19 @@ public class Arc {
 		this.link = link;
 	}
 
-	public Sommet getSource() {
+	public Vertex getSource() {
 		return source;
 	}
 
-	public void setSource(Sommet source) {
+	public void setSource(Vertex source) {
 		this.source = source;
 	}
 
-	public Sommet getTarget() {
+	public Vertex getTarget() {
 		return target;
 	}
 
-	public void setTarget(Sommet target) {
+	public void setTarget(Vertex target) {
 		this.target = target;
 	}
 

@@ -1,6 +1,7 @@
 
 package fr.univavignon.ceri.webcrawl;
 
+import java.util.LinkedList;
 import java.util.ArrayList;
 
 
@@ -8,22 +9,22 @@ public class Graph {
 	
 	
 	ArrayList<String> tableauUrl = new ArrayList<String>();
-	ArrayList<ArrayList<Sommet>> listEnsembleSommet=new ArrayList<ArrayList<Sommet>>();
-	ArrayList<Sommet> listSommet=new ArrayList<Sommet>();
+	LinkedList<LinkedList<Vertex>> listEnsembleVertex=new LinkedList<LinkedList<Vertex>>();
+	LinkedList<Vertex> listVertex=new LinkedList<Vertex>();
 	
 	//creer arc
-	ArrayList<ArrayList<Arc>> listEnsmbleArc=new ArrayList<ArrayList<Arc>>();
-	ArrayList<Arc> listArc=new ArrayList<Arc>();
-	Arc unArc ;
+	LinkedList<LinkedList<Edge>> listEnsmbleEdge=new LinkedList<LinkedList<Edge>>();
+	LinkedList<Edge> listEdge=new LinkedList<Edge>();
+	Edge unEdge ;
 	
 	//int i=0;
-	Sommet unSommet;
+	Vertex unVertex;
 	int j=0;
 	
 	public Graph(String url ) {
 		
-		this.unSommet=new Sommet(url);
-		this.unSommet.passed=true;
+		this.unVertex=new Vertex(url);
+		this.unVertex.passed=true;
 	}
 	
 	public ArrayList<String> search(String url){
@@ -38,16 +39,16 @@ public class Graph {
 	public void essai(ArrayList<String> ti) {
 		//Parser ps = new Parser(this.unSommet.getUrl());
 		//this.tableauUrl= ps.linksOnPage();
-		this.tableauUrl=search(this.unSommet.getUrl());
-		this.listSommet.add(this.unSommet);
+		this.tableauUrl=search(this.unVertex.getUrl());
+		this.listVertex.add(this.unVertex);
 		for (int i=0;i<this.tableauUrl.size();i++) {
-			Sommet b=new Sommet(this.tableauUrl.get(i));
-			this.unArc=new Arc(this.tableauUrl.get(i),this.unSommet,b);
-			this.listArc.add(unArc);
-			this.listSommet.add(b);
+			Vertex b=new Vertex(this.tableauUrl.get(i));
+			this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b);
+			this.listEdge.add(unEdge);
+			this.listVertex.add(b);
 		}
-		this.listEnsembleSommet.add(this.listSommet);
-		this.listEnsmbleArc.add(this.listArc);
+		this.listEnsembleVertex.add(this.listVertex);
+		this.listEnsmbleEdge.add(this.listEdge);
 		this.j++;
 		
 		
@@ -56,13 +57,13 @@ public class Graph {
 	
 	public void essaiIte(ArrayList<String> ti) {
 		essai(ti);
-		for(int i=1; i<this.listEnsembleSommet.get(j-1).size();i++) {
-			Sommet aux=this.listEnsembleSommet.get(j-1).get(i);
+		for(int i=1; i<this.listEnsembleVertex.get(j-1).size();i++) {
+			Vertex aux=this.listEnsembleVertex.get(j-1).get(i);
 			//System.out.println("aux . url : "+aux.url);
 			if (aux.passed==false) {
-				ArrayList<Sommet> auxA=new ArrayList<Sommet>();
-				this.listSommet=auxA;
-				this.unSommet=aux;
+				LinkedList<Vertex> auxA=new LinkedList<Vertex>();
+				this.listVertex=auxA;
+				this.unVertex=aux;
 				essai(ti);
 			}
 			else {
@@ -77,13 +78,13 @@ public class Graph {
 	public void essaiIte2(ArrayList<String> ti) {
 		essai(ti);
 		for (int l=0;l<2;l++) {
-			for(int i=1; i<listEnsembleSommet.get(l).size();i++) {
-				Sommet aux=listEnsembleSommet.get(l).get(i);
+			for(int i=1; i<listEnsembleVertex.get(l).size();i++) {
+				Vertex aux=listEnsembleVertex.get(l).get(i);
 				//System.out.println("aux . url : "+aux.url);
 				if (aux.passed==false) {
-					ArrayList<Sommet> auxA=new ArrayList<Sommet>();
-					this.listSommet=auxA;
-					this.unSommet=aux;
+					LinkedList<Vertex> auxA=new LinkedList<Vertex>();
+					this.listVertex=auxA;
+					this.unVertex=aux;
 					essai(ti);
 				}
 				else {
@@ -101,12 +102,12 @@ public class Graph {
 	public void essaiCatch(ArrayList<String> ti){
 		//essai(ti);
 		essaiIte2(ti);
-		for (int i=0; i<listEnsembleSommet.size();i++) {
-			System.out.println("list size::: "+ listEnsembleSommet.size());
-			System.out.println(listEnsembleSommet.get(i));
+		for (int i=0; i<listEnsembleVertex.size();i++) {
+			System.out.println("list size::: "+ listEnsembleVertex.size());
+			System.out.println(listEnsembleVertex.get(i));
 			System.out.println("[");
-			for (int k=0;k<listEnsembleSommet.get(i).size();k++) {
-				Sommet aux=listEnsembleSommet.get(i).get(k);
+			for (int k=0;k<listEnsembleVertex.get(i).size();k++) {
+				Vertex aux=listEnsembleVertex.get(i).get(k);
 				System.out.println(aux.getUrl());
 				//System.out.println("j::: "+(this.j-1));
 			}
@@ -121,8 +122,8 @@ public class Graph {
 	
 	public void essaiCatchArc(ArrayList<String> ti) {
 		essaiIte2(ti);
-		for (int i=0; i<listEnsmbleArc.get(0).size();i++) {
-			Arc aux=new Arc(listEnsmbleArc.get(0).get(i).getLink(),listEnsmbleArc.get(0).get(i).getSource(),listEnsmbleArc.get(0).get(i).getTarget());
+		for (int i=0; i<listEnsmbleEdge.get(0).size();i++) {
+			Edge aux=new Edge(listEnsmbleEdge.get(0).get(i).getLink(),listEnsmbleEdge.get(0).get(i).getSource(),listEnsmbleEdge.get(0).get(i).getTarget());
 			//System.out.println("nom de l'arc: "+aux.getLink());
 			System.out.println("source :::"+aux.getSource().getUrl()+":::  num sommet  :::: "+aux.getSource());
 			System.out.println("cible ::::"+aux.getLink()+":::  num sommet ::: "+aux.getTarget());
@@ -130,23 +131,23 @@ public class Graph {
 		}
 	}
 	
-	ArrayList<ArrayList<Sommet>> domainL = new ArrayList<ArrayList<Sommet>>();
-	ArrayList<Sommet> domainI=new ArrayList<Sommet>();
-	Sommet aux;
+	ArrayList<ArrayList<Vertex>> domainL = new ArrayList<ArrayList<Vertex>>();
+	ArrayList<Vertex> domainI=new ArrayList<Vertex>();
+	Vertex aux;
 	
 	public void essaiDomain(ArrayList<String> ti) {
 		//Parser ps = new Parser(this.unSommet.getUrl());
 		//this.tableauUrl= ps.linksOnPage();
-		this.tableauUrl = search(this.unSommet.getUrl());
-		this.domainI.add(this.unSommet);
+		this.tableauUrl = search(this.unVertex.getUrl());
+		this.domainI.add(this.unVertex);
 		for (int i=0;i<this.tableauUrl.size();i++) {
-			Sommet b=new Sommet(this.tableauUrl.get(i));
-			this.unArc=new Arc(this.tableauUrl.get(i),this.unSommet,b);
-			this.listArc.add(this.unArc);
-			this.listSommet.add(b);
+			Vertex b=new Vertex(this.tableauUrl.get(i));
+			this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b);
+			this.listEdge.add(this.unEdge);
+			this.listVertex.add(b);
 		}
-		this.listEnsembleSommet.add(this.listSommet);
-		this.listEnsmbleArc.add(this.listArc);
+		this.listEnsembleVertex.add(this.listVertex);
+		this.listEnsmbleEdge.add(this.listEdge);
 		this.j++;
 		
 	}

@@ -1,7 +1,7 @@
 package fr.univavignon.ceri.webcrawl;
 
 
-public class Sommet {
+public class Vertex {
 
 		protected String url;
 
@@ -9,7 +9,7 @@ public class Sommet {
 
 		protected boolean passed=false;
 		
-		public Sommet (String url) {
+		public Vertex (String url) {
 			this.url=url;
 		}
 		
