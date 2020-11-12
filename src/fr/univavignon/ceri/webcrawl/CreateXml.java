@@ -15,7 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Attr;
 
 
-public class createxml {
+public class CreateXml {
 public static void creaat(Graph graphe) {
 LinkedList<LinkedList<Edge>> auxArc=graphe.listEnsmbleEdge;
 try {
