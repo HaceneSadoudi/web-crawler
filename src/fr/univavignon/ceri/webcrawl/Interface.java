@@ -168,12 +168,21 @@ public class Interface extends Application {
 							unique = false;
 						}
 					}
+					Alert erreur = new Alert(AlertType.WARNING);
+					erreur.setTitle("Erreur insertion cible");
+					erreur.setHeaderText(null);
 					if(unique) {
-						liste.getItems().add(url.get());
+						int langueur = url.get().length();
+						if(url.get().length() < 12) {
+							erreur.setContentText("L'URL est trop court !");
+							erreur.showAndWait();
+						} else if(url.get().substring(0, 8).equals("https://")) {
+							liste.getItems().add(url.get());
+						} else {
+							erreur.setContentText("Respecter la syntaxe (https://site.domaine) !");
+							erreur.showAndWait();
+						}
 					} else {
-						Alert erreur = new Alert(AlertType.WARNING);
-						erreur.setTitle("Erreur insertion cible");
-						erreur.setHeaderText(null);
 						erreur.setContentText("Cette cible existe déjà dans la liste !");
 						erreur.showAndWait();
 					}
