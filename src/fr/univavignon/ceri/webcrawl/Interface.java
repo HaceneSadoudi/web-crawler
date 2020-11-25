@@ -101,6 +101,7 @@ public class Interface extends Application {
 			// PARTIE 2
 			
 			Button cibles_button2 = new Button("Paramètres généraux");
+			cibles_button2.setDisable(true);
 			cibles_button2.setLayoutX(150);
 			cibles_button2.setLayoutY(500);
 			
@@ -117,6 +118,7 @@ public class Interface extends Application {
 			// PARTIE 3
 			
 			Button cibles_button3 = new Button("Démarrer");
+			cibles_button3.setDisable(true);
 			cibles_button3.setLayoutX(350);
 			cibles_button3.setLayoutY(500);
 			
@@ -159,6 +161,10 @@ public class Interface extends Application {
 				Optional<String> url = input.showAndWait();
 				if (url.isPresent()){ // ne rien ajouter si l'utilisateur a cliqué sur "Annuler"
 					liste.getItems().add(url.get());
+					if(cibles_button2.isDisable() && cibles_button3.isDisable()){
+						cibles_button2.setDisable(false);
+						cibles_button3.setDisable(false);
+					}
 				}
 			});
 			
@@ -183,6 +189,8 @@ public class Interface extends Application {
 				liste.getItems().remove(n);
 				if(liste.getItems().size() == 0){
 					supprimer_cible.setDisable(true);
+					cibles_button2.setDisable(true);
+					cibles_button3.setDisable(true);
 				}
 			});
 			
