@@ -160,7 +160,23 @@ public class Interface extends Application {
 				input.setContentText("Quel est l'URL de la cible ?");
 				Optional<String> url = input.showAndWait();
 				if (url.isPresent()){ // ne rien ajouter si l'utilisateur a cliqué sur "Annuler"
-					liste.getItems().add(url.get());
+					int n;
+					boolean unique = true;
+					n = liste.getItems().size();
+					for(int i=0; i<n; i++) {
+						if(liste.getItems().get(i).equals(url.get())) {
+							unique = false;
+						}
+					}
+					if(unique) {
+						liste.getItems().add(url.get());
+					} else {
+						Alert erreur = new Alert(AlertType.WARNING);
+						erreur.setTitle("Erreur insertion cible");
+						erreur.setHeaderText(null);
+						erreur.setContentText("Cette cible existe déjà dans la liste !");
+						erreur.showAndWait();
+					}
 					if(cibles_button2.isDisable() && cibles_button3.isDisable()){
 						cibles_button2.setDisable(false);
 						cibles_button3.setDisable(false);
