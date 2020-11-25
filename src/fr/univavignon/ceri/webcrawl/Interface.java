@@ -165,20 +165,24 @@ public class Interface extends Application {
 			// PARTIE 6
 			
 			Button supprimer_cible = new Button("Supprimer cible");
+			supprimer_cible.setDisable(true);
 			supprimer_cible.setLayoutX(250);
 			supprimer_cible.setLayoutY(450);
+			
+			liste.setOnMouseClicked(e ->{
+				int n;
+				n = liste.getSelectionModel().getSelectedIndex();
+				if(n != -1){
+					supprimer_cible.setDisable(false);
+				}
+			});
 			
 			supprimer_cible.setOnAction(e -> {
 				int n;
 				n = liste.getSelectionModel().getSelectedIndex();
-				if(n == -1){
-					Alert erreur = new Alert(AlertType.WARNING);
-					erreur.setTitle("Erreur suppression cible");
-					erreur.setHeaderText(null);
-					erreur.setContentText("Vous n'avez pas choisi la cible à supprimer !");
-					erreur.showAndWait();
-				} else {
-					liste.getItems().remove(n);
+				liste.getItems().remove(n);
+				if(liste.getItems().size() == 0){
+					supprimer_cible.setDisable(true);
 				}
 			});
 			
