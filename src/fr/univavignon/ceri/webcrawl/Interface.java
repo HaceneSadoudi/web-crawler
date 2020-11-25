@@ -217,6 +217,7 @@ public class Interface extends Application {
 			ComboBox<String> noeud = new ComboBox<String>();
 			noeud.getItems().add("Page");
 			noeud.getItems().add("Domaine");
+			noeud.getSelectionModel().selectFirst();
 			noeud.setLayoutX(230);
 			noeud.setLayoutY(20);
 			
