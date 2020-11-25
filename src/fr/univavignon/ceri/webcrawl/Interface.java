@@ -142,11 +142,6 @@ public class Interface extends Application {
 			// PARTIE 4
 			
 			ListView<String> liste = new ListView<String>();
-			liste.getItems().add("Cible n°1");
-			liste.getItems().add("Cible n°2");
-			liste.getItems().add("Cible n°3");
-			liste.getItems().add("Cible n°4");
-			liste.getItems().add("Cible n°5");
 			liste.setLayoutX(50);
 			liste.setLayoutY(20);
 			
