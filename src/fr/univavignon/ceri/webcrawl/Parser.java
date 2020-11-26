@@ -1,4 +1,3 @@
-
 package fr.univavignon.ceri.webcrawl;
 
 import java.net.MalformedURLException;
@@ -55,6 +54,13 @@ public class Parser {
 		// utiliser les expressions regulieres qui vont reconnaitre les liens
 		// content = content.replace("\n", " ").replace("\n\r", " ");
 		this.body = content;
+	}
+
+	public String getTitle()
+	{
+		int title;
+		title = "";
+		return title;
 	}
 
 	public ArrayList<String> linksOnPage() {
