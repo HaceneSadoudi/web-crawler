@@ -1,6 +1,8 @@
 
 package fr.univavignon.ceri.webcrawl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -10,6 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +30,7 @@ import java.util.regex.Pattern;
 public class Parser {
 
 	// TODO
-	// Declaration des attributs de la classe Parser
+	// Variables declaration
 	private String url;
 	private String body;
 
@@ -55,6 +58,34 @@ public class Parser {
 		// utiliser les expressions regulieres qui vont reconnaitre les liens
 		// content = content.replace("\n", " ").replace("\n\r", " ");
 		this.body = content;
+	}
+
+	static public String getTitle(String url)
+	{
+		String content = null;
+		String title = null;
+		try {
+			HttpClient client = HttpClient.newBuilder()
+					.connectTimeout(Duration.ofSeconds(20))
+					.followRedirects(Redirect.ALWAYS)
+					.build();
+			HttpRequest request = HttpRequest.newBuilder()
+					.uri(URI.create(url))
+					.GET().build();
+			HttpResponse<String> response;
+				response = client.send(request, HttpResponse.BodyHandlers.ofString());
+				content = response.body();
+		String contentToLower = content.toLowerCase();
+		int begin = contentToLower.indexOf("<title") + 7;
+		int end = contentToLower.indexOf("</title>");
+		//System.out.println(begin + " " + end);
+		title = content.substring(begin, end).trim();
+		title = title.substring(title.indexOf('>') + 1, title.length());
+		System.out.println(title);
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		return title;
 	}
 
 	public ArrayList<String> linksOnPage() {
