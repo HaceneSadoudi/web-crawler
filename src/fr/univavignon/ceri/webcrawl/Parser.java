@@ -33,10 +33,19 @@ public class Parser {
 	// Variables declaration
 	private String url;
 	private String body;
+	public String bodyRobotsTxt;
+	
+	private ArrayList<String> sitemapUrls;
+	
+	public static boolean RESPECT_ROBOT_TXT = true;
+	public static boolean NORESPECT_ROBOT_TXT = false;
+	public static boolean RESPECT_SITEMAP = true;
+	public static boolean NORESPECT_SITEMAP = false;
 
-	public Parser(String _url) {
+	public Parser(String _url, boolean robottxt, boolean sitemap) {
 		this.url = _url;
 		String content = null;
+		String contentRobotsTxt = null;
 		try {
 			// Creation de la l'object client a partir de la classe HttpClient 
 			// qui va nous servir a acceder au contenu du siteweb
@@ -51,13 +60,26 @@ public class Parser {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			// Stockage du contenu de la page web dans la variable content
 			content = response.body();
+			
+			String urlRobotsTxt = url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2];
+			urlRobotsTxt += "/robots.txt";
+			System.out.println(urlRobotsTxt);
+			HttpRequest request1 = HttpRequest.newBuilder()
+					.uri(URI.create(urlRobotsTxt))
+					.GET().build();
+			// Recuperation de la reponse pour la stocker dans une variable locale
+			HttpResponse<String> response1 = client.send(request1, HttpResponse.BodyHandlers.ofString());
+			// Stockage du contenu de la page web dans la variable content
+			contentRobotsTxt = response1.body();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
+		this.body = content;
+		this.bodyRobotsTxt = contentRobotsTxt;
+		
 		// remplacement des retours a la ligne par des espaces pour
 		// utiliser les expressions regulieres qui vont reconnaitre les liens
 		// content = content.replace("\n", " ").replace("\n\r", " ");
-		this.body = content;
 	}
 
 	static public String getTitle(String url)
@@ -88,6 +110,34 @@ public class Parser {
 		return title;
 	}
 
+	public ArrayList<String> linksOnRobotsTxt(){
+		ArrayList<String> urls = new ArrayList<String>();
+		String[] lines =  this.bodyRobotsTxt.split("\n");
+		int isInBlock = 0;
+		for (String line : lines)
+		{
+			if (line.toLowerCase().indexOf("user-agent:") != -1 && isInBlock == 1)
+				break;
+			if (line.toLowerCase().indexOf("user-agent: *") == -1 && isInBlock == 0)
+			{
+				continue;
+			}
+			if (isInBlock == 0)
+			{
+				isInBlock = 1;
+				continue;
+			}
+			if (line.toLowerCase().indexOf("disallow") != -1)
+			{
+				line = line.replace("Disallow: ", "");
+				line = url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2] + line;
+				urls.add(line);
+				System.out.println(line);
+			}
+		}
+		return urls;
+
+	}
 	public ArrayList<String> linksOnPage() {
 		// Creation de la liste result c'est la ou on va stocker les liens
 		ArrayList<String> result = new ArrayList<String>();
