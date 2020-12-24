@@ -239,25 +239,29 @@ public class Graph {
 			String auxd=getDomainName(this.tableauUrl.get(i));
 			//System.out.println("domaine : "+ auxd);
 			if (listDomain.contains(auxd)) {
+				//System.out.println("le domaine "+auxd+" est deja dans la liste domaine.");
 				
-				int auxn = this.unEdge.getPonderation();
-				auxn++;
-			//	System.out.println("auxn :"+ auxn);
-				this.unEdge.setPonderation(auxn);
+				for (int h=0; h<this.listEdge.size();h++) {
+					if (this.listEdge.get(h).getTitle().compareTo(auxd)==0) {
+						int x = this.listEdge.get(h).getPonderation();
+						x++;
+						this.listEdge.get(h).setPonderation(x);
+					}	
+				}
 			}
 			else {
 				if (auxd.compareTo(dom)==0) {
-					this.unEdge = new Edge(auxd,this.unVertex,this.unVertex,1);
+					this.unEdge = new Edge(auxd,this.unVertex,this.unVertex,1,auxd);
 					this.listEdge.add(unEdge);
 					this.listVertex.add(this.unVertex);
-					listDomain.add(auxd);
+					this.listDomain.add(auxd);
 				}
 				else {
 					Vertex newDomain = new Vertex(tableauUrl.get(i),auxd);
-					this.unEdge = new Edge(auxd,this.unVertex,newDomain,1);
+					this.unEdge = new Edge(auxd,this.unVertex,newDomain,1,auxd);
 					this.listEdge.add(unEdge);
 					this.listVertex.add(newDomain);
-					listDomain.add(auxd);
+					this.listDomain.add(auxd);
 				}
 			}
 		}
@@ -274,8 +278,9 @@ public class Graph {
 		public void createDomainGraph(ArrayList<String> ti) throws MalformedURLException {
 			getOneIterationOfDomain(ti);
 			for (int l=0;l<2;l++) {
-				for(int i=1; i<listEnsembleVertex.get(l).size();i++) {
-					Vertex aux=listEnsembleVertex.get(l).get(i);
+
+				for(int i=1; i<listEnsembleVertex.get(0).size();i++) {
+					Vertex aux=listEnsembleVertex.get(0).get(i);
 					if (aux.passed==false) {
 						LinkedList<Vertex> auxA=new LinkedList<Vertex>();
 						this.listVertex=auxA;
@@ -301,12 +306,13 @@ public class Graph {
 		System.out.println("Liste Domaine : ");
 		System.out.println(this.listDomain);
 		System.out.println("list ensemble edge :"+this.listEnsmbleEdge);
+		System.out.println("size : "+this.listEnsmbleEdge.size());
 
 		for (int i=0; i<listEnsmbleEdge.get(0).size();i++) {
-			Edge aux=new Edge(listEnsmbleEdge.get(0).get(i).getLink(),listEnsmbleEdge.get(0).get(i).getSource(),listEnsmbleEdge.get(0).get(i).getTarget(),listEnsmbleEdge.get(0).get(i).getPonderation());
+			Edge aux=new Edge(listEnsmbleEdge.get(0).get(i).getLink(),listEnsmbleEdge.get(0).get(i).getSource(),listEnsmbleEdge.get(0).get(i).getTarget(),listEnsmbleEdge.get(0).get(i).getPonderation(),listEnsmbleEdge.get(0).get(i).getTitle());
 			System.out.println("poids de l'arc: "+aux.getPonderation());
-			System.out.println("source :::"+aux.getSource().getUrl()+":::  num sommet  :::: "+aux.getSource() );
-			System.out.println("cible ::::"+aux.getLink()+":::  num sommet ::: "+aux.getTarget());
+			System.out.println(aux.getSource().getUrl()+" -> "+aux.getLink()+" -> titre : "+aux.getTitle());
+	
 		}
 	}
 	

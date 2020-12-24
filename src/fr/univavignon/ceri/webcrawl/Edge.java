@@ -4,6 +4,7 @@ package fr.univavignon.ceri.webcrawl;
 public class Edge {
 	
 	protected String link;
+	protected String title;
 	protected Vertex source;
 	protected Vertex target;
 	protected int ponderation;
@@ -19,13 +20,14 @@ public class Edge {
 	}
 	
 	//si domaine
-	public Edge(String link,Vertex source ,Vertex target , int ponderation) {
+	public Edge(String link,Vertex source ,Vertex target , int ponderation, String title) {
 		// TODO Auto-generated constructor stub
 		
 		this.link=link;
 		this.source=source;
 		this.target=target;
 		this.ponderation=ponderation;
+		this.title=title;
 		
 	}
 	
@@ -37,7 +39,15 @@ public class Edge {
 	public void setLink(String link) {
 		this.link = link;
 	}
+	
+	public String getTitle() {
+		return link;
+	}
 
+	public void setTitle(String link) {
+		this.link = link;
+	}
+	
 	public Vertex getSource() {
 		return source;
 	}
