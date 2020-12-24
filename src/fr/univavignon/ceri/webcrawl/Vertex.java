@@ -17,11 +17,7 @@ public class Vertex {
 		public Vertex (String url,String title) {
 			this.url=url;
 			this.titlle=title;
-<<<<<<< HEAD
 		} 
-=======
-		}
->>>>>>> Commit des ajouts de methodes pour la gestion de domaine , pour une seul
 
 		public String getUrl() {
 			return this.url;
