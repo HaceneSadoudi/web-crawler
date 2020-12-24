@@ -4,7 +4,8 @@ package fr.univavignon.ceri.webcrawl;
 public class Vertex {
 
 		protected String url;
-
+		protected String titlle;
+		public int weight;
 		
 
 		protected boolean passed=false;
@@ -13,6 +14,10 @@ public class Vertex {
 			this.url=url;
 		}
 		
+		public Vertex (String url,String title) {
+			this.url=url;
+			this.titlle=title;
+		}
 
 		public String getUrl() {
 			return this.url;
@@ -25,7 +30,14 @@ public class Vertex {
 		 public void passer() {
 			 passed=true;
 		 }
-
+		 
+		 public void setWeight (int w) {
+			 this.weight=w;
+		 }
+		 
+		 public int getWeight () {
+			 return this.weight;
+		 }
 		 
 		 
 		 

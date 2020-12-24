@@ -1,5 +1,6 @@
 package fr.univavignon.ceri.webcrawl;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 /**
@@ -19,14 +20,18 @@ public class Launcher
 	 * 
 	 * @param args
 	 * 		Not used here.
+	 * @throws MalformedURLException 
 	 */
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws MalformedURLException
 	{	//TODO to be completed
 
 		//main test graphe.
 		ArrayList<String> tabUrl=new ArrayList<String>();
 		Graph graph=new Graph("https://youtube.com");
-		graph.graphSite(tabUrl);
+		//graph.graphSite(tabUrl);
+		graph.afficherListDomain(tabUrl);
+		//createxml xml = new createxml();
+		//xml.creaat(graph);
 	}
 }

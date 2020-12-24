@@ -17,19 +17,19 @@ import org.w3c.dom.Attr;
 
 public class createxml {
 public static void creaat(Graph graphe) {
-LinkedList<LinkedList<Edge>> auxArc=graphe.listEnsmbleEdge;
+LinkedList<LinkedList<Edge>> auxEgde=graphe.listEnsmbleEdge;
 try {
 DocumentBuilderFactory docGraph = DocumentBuilderFactory.newInstance();
 DocumentBuilder docGBuilder=docGraph.newDocumentBuilder();
 Document gra = docGBuilder.newDocument();
 Element graph = gra.createElement("graph");
 //on parcours chaque it�ration 
-for (int i=0;i<auxArc.size();i++) {
+for (int i=0;i<auxEgde.size();i++) {
 	//on parcours chaque arc
-for (int j=0;j<auxArc.get(i).size();j++) {
+for (int j=0;j<auxEgde.get(i).size();j++) {
 //je recupere dans des variables les sommets
-Vertex auxSource= new Vertex(auxArc.get(i).get(j).getSource().getUrl());
-Vertex auxTarget= new Vertex(auxArc.get(i).get(j).getTarget().getUrl());
+Vertex auxSource= new Vertex(auxEgde.get(i).get(j).getSource().getUrl());
+Vertex auxTarget= new Vertex(auxEgde.get(i).get(j).getTarget().getUrl());
 //on cr�e l'�lement arc qui aura 2 atributs 
 Element arc = gra.createElement("arc");
 Attr sommetS = gra.createAttribute("sommetSource");
