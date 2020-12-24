@@ -115,22 +115,14 @@ for (int i=0;i<auxArc.get(0).size();i++) {
 	//creation node
 
 	Element node = gra.createElement("node");								
-
 	Attr numeroID = gra.createAttribute("id");
-
 	numeroID.setValue(auxArc.get(0).get(i).getTarget().toString());		
-
 	node.setAttributeNode(numeroID);
-		
 	graph.appendChild(node);
-
 	Element data1 = gra.createElement("data");
 	Element data2 = gra.createElement("data");
-	
-
 	Attr keydata1 = gra.createAttribute("key");
 	keydata1.setValue("d0");
-
 	Attr keydata2 = gra.createAttribute("key");
 	keydata2.setValue("d3");
 	data2.setAttributeNode(keydata2);
