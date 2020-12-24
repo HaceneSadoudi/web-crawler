@@ -235,14 +235,14 @@ public class Graph {
 		this.domainI.add(this.unVertex);
 		this.unVertex.setWeight(tableauUrl.size());
 		for (int i=0;i<tableauUrl.size();i++) {
-			System.out.println("tab i  : "+ tableauUrl.get(i));
+			//System.out.println("tab i  : "+ tableauUrl.get(i));
 			String auxd=getDomainName(this.tableauUrl.get(i));
-			System.out.println("domaine : "+ auxd);
+			//System.out.println("domaine : "+ auxd);
 			if (listDomain.contains(auxd)) {
 				
 				int auxn = this.unEdge.getPonderation();
 				auxn++;
-				System.out.println("auxn :"+ auxn);
+			//	System.out.println("auxn :"+ auxn);
 				this.unEdge.setPonderation(auxn);
 			}
 			else {
@@ -267,13 +267,37 @@ public class Graph {
 		
 	}
 	
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------
+	// CREER L'ARBRE DES DOMAINES AVEC PLUSIEURS ITERATIONS
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------
+			
+		public void createDomainGraph(ArrayList<String> ti) throws MalformedURLException {
+			getOneIterationOfDomain(ti);
+			for (int l=0;l<2;l++) {
+				for(int i=1; i<listEnsembleVertex.get(l).size();i++) {
+					Vertex aux=listEnsembleVertex.get(l).get(i);
+					if (aux.passed==false) {
+						LinkedList<Vertex> auxA=new LinkedList<Vertex>();
+						this.listVertex=auxA;
+						this.unVertex=aux;
+						getOneIterationOfDomain(ti);
+					}
+					else {
+						System.out.println("la ligne : "+(j-1)+" a ete passéee");
+					}
+				}
+			}
+		}
+
+		
+	
 	
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	// AFFICHER LIST DOMAINE
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void afficherListDomain(ArrayList<String> ti) throws MalformedURLException {
-		getOneIterationOfDomain(ti);
+		createDomainGraph(ti);
 		System.out.println("Liste Domaine : ");
 		System.out.println(this.listDomain);
 		System.out.println("list ensemble edge :"+this.listEnsmbleEdge);
