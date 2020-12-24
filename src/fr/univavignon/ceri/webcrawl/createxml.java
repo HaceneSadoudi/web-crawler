@@ -19,7 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Attr;
 
 
-public class createxml {
+public class CreateXml {
 public static void creaat(Graph graphe) {
 LinkedList<LinkedList<Edge>> auxArc=graphe.listEnsmbleEdge;
 
@@ -90,7 +90,7 @@ System.out.println("");
 ide.setValue("d1");
 fore.setValue("edge");
 attre.setValue("weight");
-attrtypeeee.setValue("double");
+attrtypeeee.setValue("int");
 System.out.println("");
 key2.setAttributeNode(ide);
 key2.setAttributeNode(fore);
@@ -134,9 +134,9 @@ for (int i=0;i<auxArc.get(0).size();i++) {
 	Attr keydata2 = gra.createAttribute("key");
 	keydata2.setValue("d3");
 	data2.setAttributeNode(keydata2);
-	data2.appendChild(gra.createTextNode(ii.getLink()));													
+	data2.appendChild(gra.createTextNode(ii.getTarget().getUrl()));													
 	data1.setAttributeNode(keydata1);
-	data1.appendChild(gra.createTextNode("title"));//pour titre / A CHANGER
+	data1.appendChild(gra.createTextNode(ii.getTitle()));//pour titre / A CHANGER
 	node.appendChild(data2);
 	node.appendChild(data1);
 	Element edge3 = gra.createElement("edge");				
@@ -150,7 +150,13 @@ for (int i=0;i<auxArc.get(0).size();i++) {
 
 	edge3.setAttributeNode(sourcee);
 	edge3.setAttributeNode(target);
-
+	Element dataPoid = gra.createElement("data");		
+	Attr pooid = gra.createAttribute("key");				
+	pooid.setValue("d1");
+	dataPoid.setAttributeNode(pooid);
+	dataPoid.appendChild(gra.createTextNode(""+ii.getPonderation())); 
+	edge3.appendChild(dataPoid);
+	graph.appendChild(edge3);
 	graph.appendChild(node);
 
 }
@@ -161,7 +167,7 @@ gra.appendChild(graphml);
         DOMSource targeet = new DOMSource(gra);
         Transformer changementexport = transtory.newTransformer();
         //exporter en graphml
-        StreamResult graphhml = new StreamResult(new File("C:\\Users\\Momod\\OneDrive\\Bureau\\L3 INFORMATIQUE\\PROJETPROG\\webcrawl\\GRAPHMLLL.graphml"));
+        StreamResult graphhml = new StreamResult(new File("C:\\Users\\Momod\\OneDrive\\Bureau\\L3 INFORMATIQUE\\PROJETPROG\\fichier\\GRAPHMLLL.graphml"));
         changementexport.transform(targeet, graphhml);
 }
 catch (ParserConfigurationException pce) {
