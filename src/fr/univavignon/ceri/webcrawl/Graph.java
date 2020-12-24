@@ -210,6 +210,7 @@ public class Graph {
 	public String getDomainName(String u) throws MalformedURLException {
 		URL url = new URL(u);
 		String domain= url.getHost();
+		System.out.println(domain);
 		// domain.startsWith("www.") ? domain.substring(4) : domain;
 		//email .substring(email .indexOf("@") + 1);
 		if (domain.startsWith("www.")) {
@@ -231,7 +232,9 @@ public class Graph {
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 			
 	public void getOneIterationOfDomain(ArrayList<String> ti) throws MalformedURLException {
-		this.tableauUrl = search(this.unVertex.getUrl());
+		//this.tableauUrl = search(this.unVertex.getUrl());
+		Parser ps = new Parser(this.unVertex.getUrl());
+		this.tableauUrl= ps.linksOnPage();
 		this.domainI.add(this.unVertex);
 		this.unVertex.setWeight(tableauUrl.size());
 		for (int i=0;i<tableauUrl.size();i++) {

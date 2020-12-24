@@ -18,7 +18,7 @@ public class Launcher
 	/**
 	 * Launches the game.
 	 * 
-	 * @param args
+	 * @param args 
 	 * 		Not used here.
 	 * @throws MalformedURLException 
 	 */
@@ -28,7 +28,7 @@ public class Launcher
 
 		//main test graphe.
 		ArrayList<String> tabUrl=new ArrayList<String>();
-		Graph graph=new Graph("https://youtube.com");
+		Graph graph=new Graph("https://www.google.com/?client=safari");
 		//graph.graphSite(tabUrl);
 		graph.afficherListDomain(tabUrl);
 		//createxml xml = new createxml();

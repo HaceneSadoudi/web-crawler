@@ -17,7 +17,7 @@ public class Vertex {
 		public Vertex (String url,String title) {
 			this.url=url;
 			this.titlle=title;
-		}
+		} 
 
 		public String getUrl() {
 			return this.url;
