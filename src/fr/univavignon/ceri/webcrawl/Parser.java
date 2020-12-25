@@ -36,6 +36,8 @@ public class Parser {
 	// Variables declaration
 	private String url;
 	private String body;
+	private boolean respectSitemap;
+	private boolean respectRobot;
 	public String bodyRobotsTxt;
 	
 	private ArrayList<String> sitemapUrls;
@@ -51,6 +53,8 @@ public class Parser {
 	}
 	
 	public Parser(String _url, boolean robottxt, boolean sitemap) {
+		this.respectRobot = robottxt;
+		this.respectSitemap = sitemap;
 		this.url = _url;
 		String content = null;
 		String contentRobotsTxt = null;
@@ -253,6 +257,9 @@ public class Parser {
 			}
 		}
 
+		if (this.respectSitemap)
+			result.addAll(this.linksOnSiteMap(this.url, false));
+		
 		return result;
 	}
 	
