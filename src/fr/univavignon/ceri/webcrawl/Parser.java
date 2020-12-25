@@ -174,7 +174,6 @@ public class Parser {
 			Set<String> set = new HashSet<>(urlSiteMap);
 			urlSiteMap.clear();
 			urlSiteMap.addAll(set);
-			//System.out.println(urlSiteMap);
 			for (String url1 : urlSiteMap)
 			{
 				HttpRequest request1 = HttpRequest.newBuilder()
@@ -188,7 +187,6 @@ public class Parser {
 				int counter = 0;
 				if (response1.body().indexOf("</sitemapindex>") != -1)
 				{
-					//System.out.println("if " + urlSiteMap);
 					recursive = true;
 					while (globalMatcher.find()) 
 					{
