@@ -73,6 +73,7 @@ public class Interface extends Application {
 	XYChart.Series<Integer, Integer> g_liens;
 	int g_t = 0;
 	int nb_n = 0, nb_l = 0, nb_t = 1, nb_u = 0;
+	int n_elem_n = 0, n_elem_l = 0;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -566,7 +567,7 @@ public class Interface extends Application {
 			popup.setTitle("Graphique");
 			
 			NumberAxis x_temps = new NumberAxis();
-			x_temps.setLabel("temps (en minutes)");
+			x_temps.setLabel("temps (en secondes)");
 
 			NumberAxis y_nombre = new NumberAxis();
 			y_nombre.setLabel("nombre");
@@ -824,21 +825,23 @@ public class Interface extends Application {
 	}
 	
 	public void dem() throws MalformedURLException{
-		if(nb_n > 0 && nb_l > 0){
-			for(int i=0; i<nb_n; i++){
+		if(n_elem_n > 0 && n_elem_l > 0){
+			for(int i=0; i<n_elem_n; i++){
 				g_noeud.getData().remove(0);
 			}
-			for(int i=0; i<nb_l; i++){
+			for(int i=0; i<n_elem_l; i++){
 				g_liens.getData().remove(0);
 			}
-			nb_n = nb_l = nb_t = 0;
-			nb_u = 1;
+			n_elem_n = n_elem_l = 0;
+			nb_n = nb_l = nb_t = nb_u = 1;
+			Graph.numberEdge = Graph.numberLinkTreated = Graph.numberVertex = 0;
+			g_t = 0;
 		}
 		
 		nbgraphes = liste.getItems().size();
 		graphes = new Graph[nbgraphes];
 		
-		for(int i=0; i<liste.getItems().size(); i++) {
+		for(int i=0; i<liste.getItems().size(); i++){
 			System.out.println("URL :" + liste.getItems().get(i) + ", mod : " + noeud.getSelectionModel().getSelectedItem());
 			graphes[i] = new Graph(liste.getItems().get(i),noeud.getSelectionModel().getSelectedItem());
 			nb_t++;
@@ -912,9 +915,11 @@ public class Interface extends Application {
 						
 						g_t++;
 						nb_n = Graph.numberVertex;
+						n_elem_n++;
 						g_noeud.getData().add(new XYChart.Data<Integer, Integer>(g_t, nb_n));
 						
 						nb_l = Graph.numberEdge;
+						n_elem_l++;
 						g_liens.getData().add(new XYChart.Data<Integer, Integer>(g_t, nb_n));
 						
 						nb_u = Graph.numberLinkTreated;
