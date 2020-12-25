@@ -3,6 +3,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -113,7 +115,6 @@ graphml.appendChild(graph);
 for (int i=0;i<auxArc.get(0).size();i++) {
 	Edge ii = auxArc.get(0).get(i);
 	//creation node
-
 	Element node = gra.createElement("node");								
 	Attr numeroID = gra.createAttribute("id");
 	numeroID.setValue(auxArc.get(0).get(i).getTarget().toString());		
@@ -126,20 +127,17 @@ for (int i=0;i<auxArc.get(0).size();i++) {
 	Attr keydata2 = gra.createAttribute("key");
 	keydata2.setValue("d3");
 	data2.setAttributeNode(keydata2);
-	data2.appendChild(gra.createTextNode(ii.getTarget().getUrl()));													
+	data2.appendChild(gra.createTextNode(ii.getLink()));													
 	data1.setAttributeNode(keydata1);
 	data1.appendChild(gra.createTextNode(ii.getTitle()));//pour titre / A CHANGER
 	node.appendChild(data2);
 	node.appendChild(data1);
 	Element edge3 = gra.createElement("edge");				
-
 	Attr sourcee = gra.createAttribute("source");
 	Attr target = gra.createAttribute("target");
-
 	target.setValue(ii.getTarget().toString());
 	sourcee.setValue(ii.getSource().toString()); 
 	graph.appendChild(edge3);
-
 	edge3.setAttributeNode(sourcee);
 	edge3.setAttributeNode(target);
 	Element dataPoid = gra.createElement("data");		
@@ -150,7 +148,6 @@ for (int i=0;i<auxArc.get(0).size();i++) {
 	edge3.appendChild(dataPoid);
 	graph.appendChild(edge3);
 	graph.appendChild(node);
-
 }
 
 //on ajoute l'element graph dans le document gra
@@ -159,7 +156,9 @@ gra.appendChild(graphml);
         DOMSource targeet = new DOMSource(gra);
         Transformer changementexport = transtory.newTransformer();
         //exporter en graphml
-        StreamResult graphhml = new StreamResult(new File("C:\\Users\\Momod\\OneDrive\\Bureau\\L3 INFORMATIQUE\\PROJETPROG\\fichier\\GRAPHMLLL.graphml"));
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYYY_MM_dd_HH_mm_ss");
+        LocalDateTime now = LocalDateTime.now();
+        StreamResult graphhml = new StreamResult(new File(dtf.format(now) + ".graphml"));
         changementexport.transform(targeet, graphhml);
 }
 catch (ParserConfigurationException pce) {
