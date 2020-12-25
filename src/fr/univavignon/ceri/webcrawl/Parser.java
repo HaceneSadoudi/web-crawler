@@ -146,7 +146,6 @@ public class Parser {
 				line = line.replace("Disallow: ", "");
 				line = url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2] + line;
 				urls.add(line);
-				//System.out.println(line);
 			}
 		}
 		return urls;
@@ -167,14 +166,13 @@ public class Parser {
 				urlSiteMap.add(url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2]);
 				urlSiteMap.set(0, urlSiteMap.get(0) + "/sitemap.xml");
 				urlSiteMap.addAll(this.getSitemapsFromRobotDotTxt());
-				urlSiteMap.addAll(this.getSitemapsFromRobotDotTxt());
 			}
 			else
 				urlSiteMap.add(url);
 			Set<String> set = new HashSet<>(urlSiteMap);
 			urlSiteMap.clear();
 			urlSiteMap.addAll(set);
-			System.out.println(urlSiteMap);
+			//System.out.println(urlSiteMap);
 			for (String url1 : urlSiteMap)
 			{
 				HttpRequest request1 = HttpRequest.newBuilder()
@@ -188,7 +186,7 @@ public class Parser {
 				int counter = 0;
 				if (response1.body().indexOf("</sitemapindex>") != -1)
 				{
-					System.out.println("if " + urlSiteMap);
+					//System.out.println("if " + urlSiteMap);
 					recursive = true;
 					while (globalMatcher.find()) 
 					{
@@ -257,9 +255,24 @@ public class Parser {
 			}
 		}
 
-		if (this.respectSitemap)
+		if (this.respectSitemap) {
 			result.addAll(this.linksOnSiteMap(this.url, false));
-		
+		}
+		Set<String> set = new HashSet<>(result);
+		result.clear();
+		result.addAll(set);
+		if (this.respectRobot) {
+			ArrayList<String> linksInRobotsTxt = new ArrayList<String>();
+			linksInRobotsTxt = this.linksOnRobotsTxt();
+			for (String lien : result)
+			{
+				for (String linkInRobotsTxt : linksInRobotsTxt)
+				{
+					if (lien.matches(linkInRobotsTxt))
+						result.remove(lien);
+				}
+			}
+		}
 		return result;
 	}
 	
