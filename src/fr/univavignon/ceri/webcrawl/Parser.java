@@ -47,6 +47,7 @@ public class Parser {
 	public static boolean NORESPECT_ROBOT_TXT = false;
 	public static boolean RESPECT_SITEMAP = true;
 	public static boolean NORESPECT_SITEMAP = false;
+	public static int nbrLinks = 0;
 
 	public String getUrl()
 	{
@@ -196,6 +197,7 @@ public class Parser {
 					while (globalMatcher.find() && !recursive) 
 					{	
 						urls.add(globalMatcher.group(1));
+						this.nbrLinks++;
 					
 					}
 				}
@@ -225,13 +227,15 @@ public class Parser {
 					if (currentHref.length() >= 2 && currentHref.substring(0, 2).equals("//")) 
 					{
 						currentHref = this.url.split("//")[0] + m.group(1);
-						result.add(currentHref);
+						result.add(currentHref);						
+						this.nbrLinks++;
 					} else 
 					{
 						try 
 						{
 							new URL(currentHref);
 							result.add(m.group(1));
+							this.nbrLinks++;
 						} 
 						catch (MalformedURLException malformedURLException) 
 						{
@@ -239,6 +243,7 @@ public class Parser {
 							try {
 								url = new URL(new URL(this.url), currentHref);
 								result.add(url.toString());
+								this.nbrLinks++;
 							} 
 							catch (MalformedURLException e1) 
 							{
@@ -251,12 +256,14 @@ public class Parser {
 			}
 		}
 
-		if (this.respectSitemap) {
+		if (this.respectSitemap) 
+		{
 			result.addAll(this.linksOnSiteMap(this.url, false));
 		}
 		Set<String> set = new HashSet<>(result);
 		result.clear();
 		result.addAll(set);
+		this.nbrLinks = result.size();
 		if (this.respectRobot) {
 			ArrayList<String> linksInRobotsTxt = new ArrayList<String>();
 			linksInRobotsTxt = this.linksOnRobotsTxt();
@@ -266,7 +273,10 @@ public class Parser {
 				{
 					String link1 = linkInRobotsTxt.replace("*", "(.*)");
 					if (value.matches(link1))
+					{
 				        iterator.remove();
+						this.nbrLinks--;
+					}
 				}
 			}
 		}
