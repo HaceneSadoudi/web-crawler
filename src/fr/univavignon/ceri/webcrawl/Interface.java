@@ -101,6 +101,7 @@ public class Interface extends Application {
 			// PARTIE 2
 			
 			Button cibles_button2 = new Button("Paramètres généraux");
+			cibles_button2.setDisable(true);
 			cibles_button2.setLayoutX(150);
 			cibles_button2.setLayoutY(500);
 			
@@ -117,6 +118,7 @@ public class Interface extends Application {
 			// PARTIE 3
 			
 			Button cibles_button3 = new Button("Démarrer");
+			cibles_button3.setDisable(true);
 			cibles_button3.setLayoutX(350);
 			cibles_button3.setLayoutY(500);
 			
@@ -142,11 +144,6 @@ public class Interface extends Application {
 			// PARTIE 4
 			
 			ListView<String> liste = new ListView<String>();
-			liste.getItems().add("Cible n°1");
-			liste.getItems().add("Cible n°2");
-			liste.getItems().add("Cible n°3");
-			liste.getItems().add("Cible n°4");
-			liste.getItems().add("Cible n°5");
 			liste.setLayoutX(50);
 			liste.setLayoutY(20);
 			
@@ -163,27 +160,62 @@ public class Interface extends Application {
 				input.setContentText("Quel est l'URL de la cible ?");
 				Optional<String> url = input.showAndWait();
 				if (url.isPresent()){ // ne rien ajouter si l'utilisateur a cliqué sur "Annuler"
-					liste.getItems().add(url.get());
+					int n;
+					boolean unique = true;
+					n = liste.getItems().size();
+					for(int i=0; i<n; i++) {
+						if(liste.getItems().get(i).equals(url.get())) {
+							unique = false;
+						}
+					}
+					Alert erreur = new Alert(AlertType.WARNING);
+					erreur.setTitle("Erreur insertion cible");
+					erreur.setHeaderText(null);
+					if(unique) {
+						int langueur = url.get().length();
+						if(url.get().length() < 12) {
+							erreur.setContentText("L'URL est trop court !");
+							erreur.showAndWait();
+						} else if(url.get().substring(0, 8).equals("https://")) {
+							liste.getItems().add(url.get());
+						} else {
+							erreur.setContentText("Respecter la syntaxe (https://site.domaine) !");
+							erreur.showAndWait();
+						}
+					} else {
+						erreur.setContentText("Cette cible existe déjà dans la liste !");
+						erreur.showAndWait();
+					}
+					if(cibles_button2.isDisable() && cibles_button3.isDisable()){
+						cibles_button2.setDisable(false);
+						cibles_button3.setDisable(false);
+					}
 				}
 			});
 			
 			// PARTIE 6
 			
 			Button supprimer_cible = new Button("Supprimer cible");
+			supprimer_cible.setDisable(true);
 			supprimer_cible.setLayoutX(250);
 			supprimer_cible.setLayoutY(450);
+			
+			liste.setOnMouseClicked(e ->{
+				int n;
+				n = liste.getSelectionModel().getSelectedIndex();
+				if(n != -1){
+					supprimer_cible.setDisable(false);
+				}
+			});
 			
 			supprimer_cible.setOnAction(e -> {
 				int n;
 				n = liste.getSelectionModel().getSelectedIndex();
-				if(n == -1){
-					Alert erreur = new Alert(AlertType.WARNING);
-					erreur.setTitle("Erreur suppression cible");
-					erreur.setHeaderText(null);
-					erreur.setContentText("Vous n'avez pas choisi la cible à supprimer !");
-					erreur.showAndWait();
-				} else {
-					liste.getItems().remove(n);
+				liste.getItems().remove(n);
+				if(liste.getItems().size() == 0){
+					supprimer_cible.setDisable(true);
+					cibles_button2.setDisable(true);
+					cibles_button3.setDisable(true);
 				}
 			});
 			
@@ -210,6 +242,7 @@ public class Interface extends Application {
 			ComboBox<String> noeud = new ComboBox<String>();
 			noeud.getItems().add("Page");
 			noeud.getItems().add("Domaine");
+			noeud.getSelectionModel().selectFirst();
 			noeud.setLayoutX(230);
 			noeud.setLayoutY(20);
 			
