@@ -36,6 +36,12 @@ public class Graph {
 	ArrayList<String> listDomain= new ArrayList<String>();
 	int j=0;
 	
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------
+	//element Domain
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	int numberLinkTreated =0;
+	
 	
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 // CONSTRUCTEUR
@@ -46,7 +52,7 @@ public class Graph {
 		this.unVertex=new Vertex(url);
 		//on pose la variable passed à true
 		this.unVertex.passed=true;
-		this.dom=getDomainName(url);
+		this.dom=getDomainTitle(url);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -86,6 +92,7 @@ public class Graph {
 			this.listEdge.add(unEdge);
 																		//on ajoute le nouveau sommet dans la liste de sommet
 			this.listVertex.add(b);
+			this.numberLinkTreated++;
 		}
 		this.listEnsembleVertex.add(this.listVertex);
 																	//apres avoir fait pour tout les urls j'ajoute la liste des 
@@ -207,8 +214,8 @@ public class Graph {
 	//RENVOIE LE DOMAINE DE L'URL
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 			
-	public String getDomainName(String u) throws MalformedURLException {
-		URL url = new URL(u);
+	public String getDomainTitle(String u) throws MalformedURLException {
+		URL url = new URL(u); 
 		String domain= url.getHost();
 		System.out.println(domain);
 		// domain.startsWith("www.") ? domain.substring(4) : domain;
@@ -217,7 +224,7 @@ public class Graph {
 			String a = domain.substring(4);
 			a= a.substring(0,a.indexOf("."));
 			//System.out.println("domaine : "+ a);
-			return a;
+			return a; 
 		}
 		else {
 			String a= domain.substring(0,domain.indexOf("."));
@@ -239,7 +246,7 @@ public class Graph {
 		this.unVertex.setWeight(tableauUrl.size());
 		for (int i=0;i<tableauUrl.size();i++) {
 			//System.out.println("tab i  : "+ tableauUrl.get(i));
-			String auxd=getDomainName(this.tableauUrl.get(i));
+			String auxd=getDomainTitle(this.tableauUrl.get(i));
 			//System.out.println("domaine : "+ auxd);
 			if (listDomain.contains(auxd)) {
 				//System.out.println("le domaine "+auxd+" est deja dans la liste domaine.");
@@ -254,19 +261,20 @@ public class Graph {
 			}
 			else {
 				if (auxd.compareTo(dom)==0) {
-					this.unEdge = new Edge(auxd,this.unVertex,this.unVertex,1,auxd);
+					this.unEdge = new Edge(tableauUrl.get(i),this.unVertex,this.unVertex,1,auxd);
 					this.listEdge.add(unEdge);
 					this.listVertex.add(this.unVertex);
 					this.listDomain.add(auxd);
 				}
 				else {
 					Vertex newDomain = new Vertex(tableauUrl.get(i),auxd);
-					this.unEdge = new Edge(auxd,this.unVertex,newDomain,1,auxd);
+					this.unEdge = new Edge(tableauUrl.get(i),this.unVertex,newDomain,1,auxd);
 					this.listEdge.add(unEdge);
 					this.listVertex.add(newDomain);
 					this.listDomain.add(auxd);
 				}
 			}
+			this.numberLinkTreated++;
 		}
 		this.listEnsembleVertex.add(this.listVertex);
 		this.listEnsmbleEdge.add(this.listEdge);		
@@ -310,12 +318,12 @@ public class Graph {
 		System.out.println(this.listDomain);
 		System.out.println("list ensemble edge :"+this.listEnsmbleEdge);
 		System.out.println("size : "+this.listEnsmbleEdge.size());
-
+		//System.out.println(listEnsmbleEdge.size());
 		for (int i=0; i<listEnsmbleEdge.get(0).size();i++) {
 			Edge aux=new Edge(listEnsmbleEdge.get(0).get(i).getLink(),listEnsmbleEdge.get(0).get(i).getSource(),listEnsmbleEdge.get(0).get(i).getTarget(),listEnsmbleEdge.get(0).get(i).getPonderation(),listEnsmbleEdge.get(0).get(i).getTitle());
 			System.out.println("poids de l'arc: "+aux.getPonderation());
 			System.out.println(aux.getSource().getUrl()+" -> "+aux.getLink()+" -> titre : "+aux.getTitle());
-	
+			System.out.println();
 		}
 	}
 	
