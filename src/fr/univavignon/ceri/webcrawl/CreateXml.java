@@ -21,8 +21,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Attr;
 
 
-public class CreateXml {
-public static void creaat(Graph graphe) {
+public class createxml {
+public static void creaat(Graph graphe, int N) {
 LinkedList<LinkedList<Edge>> auxArc=graphe.listEnsmbleEdge;
 
 try {
@@ -158,7 +158,7 @@ gra.appendChild(graphml);
         //exporter en graphml
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYYY_MM_dd_HH_mm_ss");
         LocalDateTime now = LocalDateTime.now();
-        StreamResult graphhml = new StreamResult(new File(dtf.format(now) + ".graphml"));
+        StreamResult graphhml = new StreamResult(new File(dtf.format(now) + "n" +  N + ".graphml"));
         changementexport.transform(targeet, graphhml);
 }
 catch (ParserConfigurationException pce) {
