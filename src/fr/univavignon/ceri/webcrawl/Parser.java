@@ -14,6 +14,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -148,6 +149,7 @@ public class Parser {
 				urls.add(line);
 			}
 		}
+		urls.add("https://www.google.com/intl/af*/about/");
 		return urls;
 
 	}
@@ -264,12 +266,13 @@ public class Parser {
 		if (this.respectRobot) {
 			ArrayList<String> linksInRobotsTxt = new ArrayList<String>();
 			linksInRobotsTxt = this.linksOnRobotsTxt();
-			for (String lien : result)
-			{
+			for (Iterator<String> iterator = result.iterator(); iterator.hasNext(); ) {
+			    String value = iterator.next();
 				for (String linkInRobotsTxt : linksInRobotsTxt)
 				{
-					if (lien.matches(linkInRobotsTxt))
-						result.remove(lien);
+					String link1 = linkInRobotsTxt.replace("*", "(.*)");
+					if (value.matches(link1))
+				        iterator.remove();
 				}
 			}
 		}
