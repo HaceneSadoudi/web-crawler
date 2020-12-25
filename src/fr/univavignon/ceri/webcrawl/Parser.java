@@ -149,7 +149,6 @@ public class Parser {
 				urls.add(line);
 			}
 		}
-		urls.add("https://www.google.com/intl/af*/about/");
 		return urls;
 
 	}
@@ -184,7 +183,6 @@ public class Parser {
 				String globalRegex = "<loc>(.*?)</loc>";
 				Pattern globalPattern = Pattern.compile(globalRegex, Pattern.CASE_INSENSITIVE);
 				Matcher globalMatcher = globalPattern.matcher(response1.body());
-				int counter = 0;
 				if (response1.body().indexOf("</sitemapindex>") != -1)
 				{
 					recursive = true;
@@ -197,10 +195,8 @@ public class Parser {
 				{
 					while (globalMatcher.find() && !recursive) 
 					{	
-						counter++;
 						urls.add(globalMatcher.group(1));
-						if (counter >= 3)
-							break;
+					
 					}
 				}
 			}
