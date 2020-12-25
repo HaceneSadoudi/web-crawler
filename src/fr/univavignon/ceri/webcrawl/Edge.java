@@ -41,11 +41,11 @@ public class Edge {
 	}
 	
 	public String getTitle() {
-		return link;
+		return title;
 	}
 
 	public void setTitle(String link) {
-		this.link = link;
+		this.link = title;
 	}
 	
 	public Vertex getSource() {
