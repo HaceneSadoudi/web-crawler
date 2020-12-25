@@ -3,6 +3,7 @@ package fr.univavignon.ceri.webcrawl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -12,7 +13,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,13 +45,16 @@ public class Parser {
 	public static boolean RESPECT_SITEMAP = true;
 	public static boolean NORESPECT_SITEMAP = false;
 
+	public String getUrl()
+	{
+		return this.url;
+	}
+	
 	public Parser(String _url, boolean robottxt, boolean sitemap) {
 		this.url = _url;
 		String content = null;
 		String contentRobotsTxt = null;
 		try {
-			// Creation de la l'object client a partir de la classe HttpClient 
-			// qui va nous servir a acceder au contenu du siteweb
 			HttpClient client = HttpClient.newBuilder()
 					.connectTimeout(Duration.ofSeconds(20))
 					.followRedirects(Redirect.ALWAYS)
@@ -56,30 +62,20 @@ public class Parser {
 			HttpRequest request = HttpRequest.newBuilder()
 					.uri(URI.create(this.url))
 					.GET().build();
-			// Recuperation de la reponse pour la stocker dans une variable locale
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			// Stockage du contenu de la page web dans la variable content
 			content = response.body();
 			
 			String urlRobotsTxt = url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2];
 			urlRobotsTxt += "/robots.txt";
-			System.out.println(urlRobotsTxt);
 			HttpRequest request1 = HttpRequest.newBuilder()
 					.uri(URI.create(urlRobotsTxt))
 					.GET().build();
-			// Recuperation de la reponse pour la stocker dans une variable locale
 			HttpResponse<String> response1 = client.send(request1, HttpResponse.BodyHandlers.ofString());
-			// Stockage du contenu de la page web dans la variable content
 			contentRobotsTxt = response1.body();
 		} catch (Exception ex) {
-			//ex.printStackTrace();
 		}
 		this.body = content;
 		this.bodyRobotsTxt = contentRobotsTxt;
-		
-		// remplacement des retours a la ligne par des espaces pour
-		// utiliser les expressions regulieres qui vont reconnaitre les liens
-		// content = content.replace("\n", " ").replace("\n\r", " ");
 	}
 
 	static public String getTitle(String url)
@@ -100,7 +96,6 @@ public class Parser {
 		String contentToLower = content.toLowerCase();
 		int begin = contentToLower.indexOf("<title") + 7;
 		int end = contentToLower.indexOf("</title>");
-		//System.out.println(begin + " " + end);
 		title = content.substring(begin, end).trim();
 		title = title.substring(title.indexOf('>') + 1, title.length());
 		System.out.println(title);
@@ -110,6 +105,21 @@ public class Parser {
 		return title;
 	}
 
+	public ArrayList<String> getSitemapsFromRobotDotTxt(){
+		ArrayList<String> urls = new ArrayList<String>();
+		String[] lines =  this.bodyRobotsTxt.split("\n");
+		for (String line : lines)
+		{
+			if (line.indexOf("Sitemap:") != -1)
+			{
+				line = line.split(" ")[1];
+				urls.add(line);
+			}
+		}
+		return urls;
+
+	}
+	
 	public ArrayList<String> linksOnRobotsTxt(){
 		ArrayList<String> urls = new ArrayList<String>();
 		String[] lines =  this.bodyRobotsTxt.split("\n");
@@ -132,51 +142,99 @@ public class Parser {
 				line = line.replace("Disallow: ", "");
 				line = url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2] + line;
 				urls.add(line);
-				System.out.println(line);
+				//System.out.println(line);
 			}
 		}
 		return urls;
 
 	}
+	
+	public ArrayList<String> linksOnSiteMap(String url, boolean isSiteMapLink){
+		ArrayList<String> urls = new ArrayList<String>();
+		ArrayList<String> urlSiteMap = new ArrayList<String>();
+		boolean recursive = false;
+		try {			
+			HttpClient client = HttpClient.newBuilder()
+					.connectTimeout(Duration.ofSeconds(20))
+					.followRedirects(Redirect.ALWAYS)
+					.build();
+			if (!isSiteMapLink)
+			{
+				urlSiteMap.add(url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2]);
+				urlSiteMap.set(0, urlSiteMap.get(0) + "/sitemap.xml");
+				urlSiteMap.addAll(this.getSitemapsFromRobotDotTxt());
+				urlSiteMap.addAll(this.getSitemapsFromRobotDotTxt());
+			}
+			else
+				urlSiteMap.add(url);
+			Set<String> set = new HashSet<>(urlSiteMap);
+			urlSiteMap.clear();
+			urlSiteMap.addAll(set);
+			System.out.println(urlSiteMap);
+			for (String url1 : urlSiteMap)
+			{
+				HttpRequest request1 = HttpRequest.newBuilder()
+						.setHeader("User-Agent", "Googlebot")
+						.uri(URI.create(url1))
+						.GET().build();
+				HttpResponse<String> response1 = client.send(request1, HttpResponse.BodyHandlers.ofString());
+				String globalRegex = "<loc>(.*?)</loc>";
+				Pattern globalPattern = Pattern.compile(globalRegex, Pattern.CASE_INSENSITIVE);
+				Matcher globalMatcher = globalPattern.matcher(response1.body());
+				int counter = 0;
+				if (response1.body().indexOf("</sitemapindex>") != -1)
+				{
+					System.out.println("if " + urlSiteMap);
+					recursive = true;
+					while (globalMatcher.find()) 
+					{
+						urls.addAll(this.linksOnSiteMap(globalMatcher.group(1), true));
+					}
+				}
+				else
+				{
+					while (globalMatcher.find() && !recursive) 
+					{	
+						counter++;
+						urls.add(globalMatcher.group(1));
+						if (counter >= 3)
+							break;
+					}
+				}
+			}
+			
+		} catch (Exception e)
+		{
+			System.out.println(e);
+		}
+		return urls;
+
+	}
+	
 	public ArrayList<String> linksOnPage() {
-		// Creation de la liste result c'est la ou on va stocker les liens
 		ArrayList<String> result = new ArrayList<String>();
-		// Expression reguliere qui recuperes toutes les balises de type <a>...<a>
 		String globalRegex = "<a (.*?)</a>";
 		Pattern globalPattern = Pattern.compile(globalRegex, Pattern.CASE_INSENSITIVE);
 		Matcher globalMatcher = globalPattern.matcher(this.body);
 		while (globalMatcher.find()) {
-			// Expresion reguliere pour recuperer le contenu du href
 			String regex = "href=\"(.*?)\"";
-			// Ici on ignore les majiscules et les minuscules pour qu'on puisse 
-			// traiter tous type des balise et href soit miniscules ou bien majiscules ou
-			// les deux ensemble
 			Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(globalMatcher.group());
 			while (m.find()) {
-				// ici on ignore les liens qui commencent par # par ce
-				// qu'ils menent pas vers des autres pages
 				if (m.group(1).length() > 0 && m.group(1).charAt(0) != '#') 
 				{
 					String currentHref = m.group(1);
-					// On reformule les liens qui commencent avec des // 
-					// on doit ajouter soit http ou bien https
 					if (currentHref.length() >= 2 && currentHref.substring(0, 2).equals("//")) 
 					{
 						currentHref = this.url.split("//")[0] + m.group(1);
 						result.add(currentHref);
 					} else 
 					{
-						//ici on verifie si le contenu du href s'agit bien
-						// bien d'un lien
 						try 
 						{
 							new URL(currentHref);
 							result.add(m.group(1));
 						} 
-						// sinon on essaye de le reformuler par ce que
-						// on sait pas s'il est un lien relatif a l'url de base
-						// ou pas
 						catch (MalformedURLException malformedURLException) 
 						{
 							URL url = null;
