@@ -243,22 +243,53 @@ public class Graph extends Thread{
 	public String getDomainTitle(String u) throws MalformedURLException {
 		URL url = new URL(u); 
 		String domain= url.getHost();
-		//System.out.println(domain);
-		// domain.startsWith("www.") ? domain.substring(4) : domain;
-		//email .substring(email .indexOf("@") + 1);
-		/*if (domain.startsWith("www.")) {
-			String a = domain.substring(4);
-			a= a.substring(0,a.indexOf("."));
-			//System.out.println("domaine : "+ a);
-			return a; 
+		System.out.println(domain);
+		int nbr;
+		char c;
+		ArrayList<String> mots=new ArrayList();
+		String mot = "";
+	
+		if (domain =="") {
+			return "";
 		}
 		else {
-			String a= domain.substring(0,domain.indexOf("."));
-			//System.out.println("domaine : "+ a);
-			//System.out.println("domaine : "+ domain);
-			return a;
-		}*/
-		return domain;
+			if (domain.startsWith("www.")) {
+				for(int i = 0 ; i < domain.length()-1 ; i++){
+				    c = domain.charAt(i);
+				    //System.out.print(c);
+				    
+				    	if(c=='.') {
+				    		mots.add(mot);
+				    		mot="";
+				    	}
+				    	else {
+				    		mot=mot+c;
+				    	}
+				    
+				}
+					return mots.get(mots.size()-1); 
+				
+			}
+			else {
+				for(int i = 0 ; i < domain.length()-1 ; i++){
+				    c = domain.charAt(i);
+				    //System.out.println(c);
+				    
+				    	if(c=='.') {
+				    		c = domain.charAt(i);
+				    		mots.add(mot);
+				    		mot="";
+				    	}
+				    	else {
+				    		mot=mot+c;
+				    	}
+				    
+				}
+				
+					return mots.get(mots.size()-1); 
+				
+			}
+		}	
 	}
 	 
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
