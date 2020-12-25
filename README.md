@@ -3,7 +3,7 @@
 A web crawler can be used to browse the World Wide Web, typically for the purpose of Web indexing, as in many existing search engines, such as Google, Bing, Yandex, DuckDuckGo, Qwant, and so on.
 
 This software was developed as an assignment during the 2020/21 university year at the CERI, Avignon University (France), by the following students:
-* Author 1
+* Abdelhakim RASFI
 * Author 2
 * Author 3
 * Author 4
@@ -18,7 +18,7 @@ The source code is organized as follows...
 
 ## Installation
 Here is the procedure to install this software :
-1. Do this
+1. Download java sdk library
 2. Do that
 3. etc.
 

@@ -82,7 +82,7 @@ public class Graph {
 	
 	public void creationNode(ArrayList<String> ti) throws MalformedURLException {
 		//essaie du parseur 
-		Parser ps = new Parser(this.unVertex.getUrl());
+		Parser ps = new Parser(this.unVertex.getUrl(), true, true);
 		this.tableauUrl= ps.linksOnPage();
 		//this.tableauUrl=search(this.unVertex.getUrl());
 		//this.tableauUrl=search(this.unVertex.getUrl());		//on rempli tableauUrl avec les liens recuperer
@@ -242,7 +242,7 @@ public class Graph {
 			
 	public void getOneIterationOfDomain(ArrayList<String> ti) throws MalformedURLException {
 		//this.tableauUrl = search(this.unVertex.getUrl());
-		Parser ps = new Parser(this.unVertex.getUrl());
+		Parser ps = new Parser(this.unVertex.getUrl(),true , true);
 		this.tableauUrl= ps.linksOnPage();
 		this.domainI.add(this.unVertex);
 		this.unVertex.setWeight(tableauUrl.size());
