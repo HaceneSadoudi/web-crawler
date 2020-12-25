@@ -2,6 +2,8 @@
 package fr.univavignon.ceri.webcrawl;
 
 import java.util.LinkedList;
+
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -78,7 +80,7 @@ public class Graph {
 	//CREER ARBRE POUR UN NOEUD
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	public void creationNode(ArrayList<String> ti) {
+	public void creationNode(ArrayList<String> ti) throws MalformedURLException {
 		//essaie du parseur 
 		Parser ps = new Parser(this.unVertex.getUrl());
 		this.tableauUrl= ps.linksOnPage();
@@ -87,7 +89,7 @@ public class Graph {
 		this.listVertex.add(this.unVertex);			//on entre dans listSommet le sommet source
 		for (int i=0;i<this.tableauUrl.size();i++) {	//pour chaque url on creer un noed et on relie
 			Vertex b=new Vertex(this.tableauUrl.get(i));		//la source avec ce nouveau sommet grace à un arc
-			this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b);		
+			this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b,1,getDomainTitle(this.tableauUrl.get(i)));		
 																				//on ajoute ce nouvel arc dans la list d'arc pour ce sommet source
 			this.listEdge.add(unEdge);
 																		//on ajoute le nouveau sommet dans la liste de sommet
@@ -130,7 +132,7 @@ public class Graph {
 	// CREER L'ARBRE AVEC PLUSIEURS ITERATIONS
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-	public void creationGraphEnLargeur(ArrayList<String> ti) {
+	public void creationGraphEnLargeur(ArrayList<String> ti) throws MalformedURLException {
 		creationNode(ti);
 		for (int l=0;l<2;l++) {
 			for(int i=1; i<listEnsembleVertex.get(l).size();i++) {
@@ -157,7 +159,7 @@ public class Graph {
 	// EXECUTE ET AFFICHE EDGE ET VERTEX
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-	public void essaiCatch(ArrayList<String> ti){
+	public void essaiCatch(ArrayList<String> ti) throws MalformedURLException{
 		//essai(ti);
 		creationGraphEnLargeur(ti);
 		for (int i=0; i<listEnsembleVertex.size();i++) {
@@ -180,7 +182,7 @@ public class Graph {
 	// EXECUTE AFFICHE EDGE
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-	public void essaiCatchArc(ArrayList<String> ti) {
+	public void essaiCatchArc(ArrayList<String> ti) throws MalformedURLException {
 		creationGraphEnLargeur(ti);
 		for (int i=0; i<listEnsmbleEdge.get(0).size();i++) {
 			Edge aux=new Edge(listEnsmbleEdge.get(0).get(i).getLink(),listEnsmbleEdge.get(0).get(i).getSource(),listEnsmbleEdge.get(0).get(i).getTarget());
@@ -195,7 +197,7 @@ public class Graph {
 	// EXECUTE ET AFFICHE EDGE
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 			
-	public void graphSite(ArrayList<String> ti) {
+	public void graphSite(ArrayList<String> ti) throws MalformedURLException {
 		essaiCatchArc(ti);
 	}
 	
