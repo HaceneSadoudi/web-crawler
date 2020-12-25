@@ -47,7 +47,7 @@ public class Parser {
 	public static boolean NORESPECT_ROBOT_TXT = false;
 	public static boolean RESPECT_SITEMAP = true;
 	public static boolean NORESPECT_SITEMAP = false;
-	public static int nbrLinks = 0;
+	public int nbrLinks = 0;
 
 	public String getUrl()
 	{
