@@ -60,8 +60,16 @@ public class Interface extends Application {
 	Label nb_noeuds;
 	Label nb_liens;
 	
+	//static boolean mustWait = false;
+	static int nb_t = 0;
+	
 	ListView<String> liste;
 	ComboBox<String> noeud;
+	Spinner<Integer> rayon;
+	Spinner<Integer> processus;
+	CheckBox domaine;
+	CheckBox robot;
+	CheckBox sitemap;
 	
 	Graph[] graphes;
 	int nbgraphes;
@@ -72,7 +80,7 @@ public class Interface extends Application {
 	XYChart.Series<Integer, Integer> g_noeud;
 	XYChart.Series<Integer, Integer> g_liens;
 	int g_t = 0;
-	int nb_n = 0, nb_l = 0, nb_t = 1, nb_u = 0;
+	int nb_n = 0, nb_l = 0, nb_u = 0;
 	int n_elem_n = 0, n_elem_l = 0;
 	
 	@Override
@@ -300,7 +308,7 @@ public class Interface extends Application {
 			
 			SpinnerValueFactory<Integer> modelRayon = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 3); // min, max, nombre initiale
 			
-			Spinner<Integer> rayon = new Spinner<Integer>();
+			rayon = new Spinner<Integer>();
 			rayon.setValueFactory(modelRayon);
 			rayon.setLayoutX(230);
 			rayon.setLayoutY(100);
@@ -356,7 +364,7 @@ public class Interface extends Application {
 			label_domaine.setLayoutX(50);
 			label_domaine.setLayoutY(200);
 			
-			CheckBox domaine = new CheckBox();
+			domaine = new CheckBox();
 			domaine.setLayoutX(250);
 			domaine.setLayoutY(200);
 			
@@ -377,7 +385,7 @@ public class Interface extends Application {
 			label_processus.setLayoutY(300);
 			
 			SpinnerValueFactory<Integer> modelProcessus = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1);
-			Spinner<Integer> processus = new Spinner<Integer>();
+			processus = new Spinner<Integer>();
 			processus.setValueFactory(modelProcessus);
 			processus.setLayoutX(230);
 			processus.setLayoutY(300);
@@ -389,7 +397,7 @@ public class Interface extends Application {
 			label_robot.setLayoutX(50);
 			label_robot.setLayoutY(350);
 			
-			CheckBox robot = new CheckBox();
+			robot = new CheckBox();
 			robot.setLayoutX(250);
 			robot.setLayoutY(350);
 			
@@ -400,7 +408,7 @@ public class Interface extends Application {
 			label_sitemap.setLayoutX(50);
 			label_sitemap.setLayoutY(400);
 			
-			CheckBox sitemap = new CheckBox();
+			sitemap = new CheckBox();
 			sitemap.setLayoutX(250);
 			sitemap.setLayoutY(400);
 			
@@ -833,20 +841,61 @@ public class Interface extends Application {
 				g_liens.getData().remove(0);
 			}
 			n_elem_n = n_elem_l = 0;
-			nb_n = nb_l = nb_t = nb_u = 1;
-			Graph.numberEdge = Graph.numberLinkTreated = Graph.numberVertex = 0;
+			nb_n = nb_l = nb_t = nb_u = 0;
+			prog1.setProgress(0);
+			prog2.setProgress(0);
+			Graph.numberEdge = Graph.numberLinkTreated = Graph.numberVertex = Graph.numberLinkFound = 0 ;
 			g_t = 0;
 		}
 		
+		// -----
+		
 		nbgraphes = liste.getItems().size();
 		graphes = new Graph[nbgraphes];
+ 		
+ 		//int temp = liste.getItems().size()/processus.getValue();
+ 		//int compteur = 0;
+ 		
+ 		for(int i=0; i<liste.getItems().size(); i++){
+ 			System.out.println("URL :" + liste.getItems().get(i) + ", mod : " + noeud.getSelectionModel().getSelectedItem());
+ 			try {
+				graphes[i] = new Graph(liste.getItems().get(i),noeud.getSelectionModel().getSelectedItem(), rayon.getValue(), robot.isSelected(), sitemap.isSelected(), domaine.isSelected());
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+ 			nb_t++;
+ 			graphes[i].start();
+ 		}
 		
-		for(int i=0; i<liste.getItems().size(); i++){
-			System.out.println("URL :" + liste.getItems().get(i) + ", mod : " + noeud.getSelectionModel().getSelectedItem());
-			graphes[i] = new Graph(liste.getItems().get(i),noeud.getSelectionModel().getSelectedItem());
-			nb_t++;
-			graphes[i].start();
-		}
+		/*Runnable r = new Runnable(){
+			public void run() {
+				nbgraphes = liste.getItems().size();
+				graphes = new Graph[nbgraphes];
+	     		
+	     		/*int temp = liste.getItems().size()/processus.getValue();
+	     		int compteur = 0;
+	     		
+	     		for(int i=0; i<liste.getItems().size(); i++){
+	     			if(compteur >= temp){
+	     				mustWait = true;
+	     				while(mustWait){}
+	     			}
+	     			System.out.println("URL :" + liste.getItems().get(i) + ", mod : " + noeud.getSelectionModel().getSelectedItem());
+	     			try {
+						graphes[i] = new Graph(liste.getItems().get(i),noeud.getSelectionModel().getSelectedItem(), rayon.getValue(), robot.isSelected(), sitemap.isSelected());
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	     			nb_t++;
+	     			graphes[i].start();
+	     			if((i+1) % temp == 0){
+	     				compteur++;
+	     			}
+	     		}
+	     
+	    new Thread(r).start();*/
 		
 		control_temps = true;
 		
@@ -886,6 +935,22 @@ public class Interface extends Application {
 						}
 						temps_ecoule.setText(hE + "h " + mE + "m " + sE + "s");
 						
+						int t = 1;
+						for(int i=0; i<liste.getItems().size(); i++){
+							t = t * graphes[i].termine;
+						}
+						
+						if(t == 1){
+							prog1.setProgress(1);
+							prog2.setProgress(1);
+							demarrer_button3.fire();
+							Alert fin = new Alert(AlertType.INFORMATION);
+							fin.setTitle("Fin de recherche");
+							fin.setHeaderText(null);
+							fin.setContentText("Votre recherche est terminée !");
+							fin.showAndWait();
+						}
+						
 						if(control_temps == true){ 
 							if(hR == 0 && mR == 0 && sR == 0) {
 								demarrer_button3.fire();
@@ -920,7 +985,7 @@ public class Interface extends Application {
 						
 						nb_l = Graph.numberEdge;
 						n_elem_l++;
-						g_liens.getData().add(new XYChart.Data<Integer, Integer>(g_t, nb_n));
+						g_liens.getData().add(new XYChart.Data<Integer, Integer>(g_t, nb_l));
 						
 						nb_u = Graph.numberLinkTreated;
 						
@@ -935,10 +1000,11 @@ public class Interface extends Application {
 			  }
 		};
 		timer.schedule(execution, 1000, 1000);
+		
+		// ----
 	}
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
 }
-
