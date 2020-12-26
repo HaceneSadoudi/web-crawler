@@ -7,6 +7,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+// robot
+// cas 1 : utilsiateur a choisi de respecter robot.txt : passer variable Parser.RESPECT_Robot_TXT (toujours)
+// cas 2 : utilsiateur a choisi de ne pas respecter robot.txt : passer variable Parser.NON_RESPECT_Robot_TXT (toujours)
+
+// sitemap
+// cas 3 : utilsiateur a choisi de respecter sitemap.txt : passer variable Parser.RESPECTsitemap_TXT
+// cas 4 : utilsiateur a choisi de ne pas respecter sitemap.txt : passer variable Parser.NON_RESPECTsitemap_TXT (toujours)
+
+
+// cas 3 special :
+// on passe Parser.RESPECTsitemap_TXT, si c'est une page on ne respecte pas (que dans domaine)
 
 public class Graph extends Thread{
 	
@@ -40,18 +51,31 @@ public class Graph extends Thread{
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	String modalite;
+	public int termine;
 	
+	public static int numberLinkFound = 0;
 	public static int numberLinkTreated = 0;
-	public static int numberVertex = 0;
+	public static int numberVertex = 1;
 	public static int numberEdge = 0;
 	
+	public int limite = 2;
+	public boolean robot;
+	public boolean site;
 	
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 // CONSTRUCTEUR
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 			
-	public Graph(String url, String mod) throws MalformedURLException {
+	public Graph(String url, String mod, int limite, boolean robot, boolean site) throws MalformedURLException {
 		this.modalite = mod;
+		this.termine = 0;
+		if(limite == 0){ // pas de limite
+			this.limite = 9999;
+		} else {
+			this.limite = limite;
+		}
+		this.robot = robot;
+		this.site = site;
 		//on donne au sommet de depart une url
 		this.unVertex=new Vertex(url);
 		//on pose la variable passed à true
@@ -64,6 +88,9 @@ public class Graph extends Thread{
 			try {
 				System.out.println(Thread.currentThread().getName());
 				creationGraphEnLargeur();
+				this.termine = 1;
+				Interface.nb_t--;
+				Interface.mustWait = false;
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -72,6 +99,9 @@ public class Graph extends Thread{
 			try {
 				System.out.println(Thread.currentThread().getName());
 				createDomainGraph();
+				this.termine = 1;
+				Interface.nb_t--;
+				Interface.mustWait = false;
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -102,8 +132,35 @@ public class Graph extends Thread{
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public void creationNode() throws MalformedURLException {
-		//essaie du parseur 
-		Parser ps = new Parser(this.unVertex.getUrl(), true, true);
+		//essaie du parseur
+		Parser ps;
+		if(this.robot == true){
+			if(this.site == false){
+				ps = new Parser(this.unVertex.getUrl(), Parser.RESPECT_ROBOT_TXT, Parser.NORESPECT_SITEMAP);
+				//ps = new Parser(this.unVertex.getUrl(), true, false);
+			} else {
+				 if(unDomain(this.unVertex.getUrl())){
+					 ps = new Parser(this.unVertex.getUrl(), Parser.RESPECT_ROBOT_TXT, Parser.RESPECT_SITEMAP);
+					 //ps = new Parser(this.unVertex.getUrl(), true, true);
+				 } else {
+					 ps = new Parser(this.unVertex.getUrl(), Parser.RESPECT_ROBOT_TXT, Parser.NORESPECT_ROBOT_TXT);
+					 //ps = new Parser(this.unVertex.getUrl(), true, false);
+				 }
+			}
+		} else {
+			if(this.site == false){
+				ps = new Parser(this.unVertex.getUrl(), Parser.NORESPECT_ROBOT_TXT, Parser.NORESPECT_SITEMAP);
+				//ps = new Parser(this.unVertex.getUrl(), false, false);
+			} else {
+				if(unDomain(this.unVertex.getUrl())){
+					ps = new Parser(this.unVertex.getUrl(), Parser.NORESPECT_ROBOT_TXT, Parser.RESPECT_SITEMAP);
+					//ps = new Parser(this.unVertex.getUrl(), false, true);
+				 } else {
+					 ps = new Parser(this.unVertex.getUrl(), Parser.NORESPECT_ROBOT_TXT, Parser.NORESPECT_ROBOT_TXT);
+					// ps = new Parser(this.unVertex.getUrl(), false, false);
+				 }
+			}
+		}
 		this.tableauUrl= ps.linksOnPage();
 		//this.tableauUrl=search(this.unVertex.getUrl());
 		//this.tableauUrl=search(this.unVertex.getUrl());		//on rempli tableauUrl avec les liens recuperer
@@ -129,6 +186,21 @@ public class Graph extends Thread{
 		
 		
 	}
+	
+	public boolean unDomain(String url) throws MalformedURLException {
+        char c;
+        int nb=0;
+        URL b = new URL(url); 
+        String domain= b.getHost();
+        if (url.length()>domain.length()+8) {
+            System.out.println("page");
+            return false;
+        }
+        else {
+            System.out.println("domaine");
+            return true;
+        }
+    }
 	
 	/*
 	public void essaiIte(ArrayList<String> ti) {
@@ -158,7 +230,7 @@ public class Graph extends Thread{
 		
 	public void creationGraphEnLargeur() throws MalformedURLException {
 		creationNode();
-		for (int l=0;l<2;l++) {
+		for (int l=0;l<this.limite;l++) {
 			for(int i=1; i<listEnsembleVertex.get(l).size();i++) {
 				Vertex aux=listEnsembleVertex.get(l).get(i);
 				//System.out.println("aux . url : "+aux.url);
@@ -298,7 +370,28 @@ public class Graph extends Thread{
 			
 	public void getOneIterationOfDomain() throws MalformedURLException {
 		//this.tableauUrl = search(this.unVertex.getUrl());
-		Parser ps = new Parser(this.unVertex.getUrl(),true , true);
+		Parser ps;
+		if(this.robot == true){
+			if(this.site == false){
+				ps = new Parser(this.unVertex.getUrl(), Parser.RESPECT_ROBOT_TXT, Parser.NORESPECT_SITEMAP);
+			} else {
+				 if(unDomain(this.unVertex.getUrl())){
+					 ps = new Parser(this.unVertex.getUrl(), Parser.RESPECT_ROBOT_TXT, Parser.RESPECT_SITEMAP);
+				 } else {
+					 ps = new Parser(this.unVertex.getUrl(), Parser.RESPECT_ROBOT_TXT, Parser.NORESPECT_ROBOT_TXT);
+				 }
+			}
+		} else {
+			if(this.site == false){
+				ps = new Parser(this.unVertex.getUrl(), Parser.NORESPECT_ROBOT_TXT, Parser.NORESPECT_SITEMAP);
+			} else {
+				if(unDomain(this.unVertex.getUrl())){
+					 ps = new Parser(this.unVertex.getUrl(), Parser.NORESPECT_ROBOT_TXT, Parser.RESPECT_SITEMAP);
+				 } else {
+					 ps = new Parser(this.unVertex.getUrl(), Parser.NORESPECT_ROBOT_TXT, Parser.NORESPECT_ROBOT_TXT);
+				 }
+			}
+		}
 		this.tableauUrl= ps.linksOnPage();
 		this.domainI.add(this.unVertex);
 		this.unVertex.setWeight(tableauUrl.size());
@@ -349,7 +442,7 @@ public class Graph extends Thread{
 			
 		public void createDomainGraph() throws MalformedURLException {
 			getOneIterationOfDomain();
-			for (int l=0;l<2;l++) {
+			for (int l=0;l<this.limite;l++) {
 
 				for(int i=1; i<listEnsembleVertex.get(0).size();i++) {
 					Vertex aux=listEnsembleVertex.get(0).get(i);
