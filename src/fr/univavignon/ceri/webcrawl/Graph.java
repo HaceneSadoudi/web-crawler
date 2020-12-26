@@ -92,7 +92,7 @@ public class Graph extends Thread{
 				creationGraphEnLargeur();
 				this.termine = 1;
 				Interface.nb_t--;
-				Interface.mustWait = false;
+				//Interface.mustWait = false;
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -103,7 +103,7 @@ public class Graph extends Thread{
 				createDomainGraph();
 				this.termine = 1;
 				Interface.nb_t--;
-				Interface.mustWait = false;
+				//Interface.mustWait = false;
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -184,7 +184,8 @@ public class Graph extends Thread{
 			for (int i=0;i<this.tableauUrl.size();i++) {	//pour chaque url on creer un noed et on relie
 				
 				String u=getDomainTitle(this.tableauUrl.get(i));
-				if (u==dom) {
+				//if (u==dom) {
+				if(u.compareTo(dom)==0){
 					numberVertex++;
 					Vertex b=new Vertex(this.tableauUrl.get(i));
 					numberEdge++;
@@ -194,8 +195,8 @@ public class Graph extends Thread{
 					this.listEdge.add(unEdge);
 																				//on ajoute le nouveau sommet dans la liste de sommet
 					this.listVertex.add(b);
-					numberLinkTreated++;
 				}
+				numberLinkTreated++;
 				
 			}
 			this.listEnsembleVertex.add(this.listVertex);
