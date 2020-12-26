@@ -61,12 +61,13 @@ public class Graph extends Thread{
 	public int limite = 2;
 	public boolean robot;
 	public boolean site;
+	public boolean stayDomain;
 	
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 // CONSTRUCTEUR
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 			
-	public Graph(String url, String mod, int limite, boolean robot, boolean site) throws MalformedURLException {
+	public Graph(String url, String mod, int limite, boolean robot, boolean site, boolean stayDomain) throws MalformedURLException {
 		this.modalite = mod;
 		this.termine = 0;
 		if(limite == 0){ // pas de limite
@@ -76,6 +77,7 @@ public class Graph extends Thread{
 		}
 		this.robot = robot;
 		this.site = site;
+		this.stayDomain=stayDomain;
 		//on donne au sommet de depart une url
 		this.unVertex=new Vertex(url);
 		//on pose la variable passed à true
@@ -108,21 +110,6 @@ public class Graph extends Thread{
 			}
 		}
 	}
-//----------------------------------------------------------------------------------------------------------------------------------------------------------
-//pour tester la fonciton
-//----------------------------------------------------------------------------------------------------------------------------------------------------------
-	
-	public ArrayList<String> search(String url){
-		ArrayList<String> ti = new ArrayList<String>();
-		ti.add("https://www.youtube.com/?hl=fr&gl=FR");
-		ti.add("https://www.youtube.com/feed/history");
-		ti.add("https://twitter.com/?lang=fr");
-		ti.add("https://twitter.com/?lang=fr");
-		ti.add("https://www.google.com/?client=safari");
-		return ti;
-		
-	}
-	
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 //PAGE WEB
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -161,30 +148,64 @@ public class Graph extends Thread{
 				 }
 			}
 		}
-		this.tableauUrl= ps.linksOnPage();
-		//this.tableauUrl=search(this.unVertex.getUrl());
-		//this.tableauUrl=search(this.unVertex.getUrl());		//on rempli tableauUrl avec les liens recuperer
-		this.listVertex.add(this.unVertex);			//on entre dans listSommet le sommet source
-		for (int i=0;i<this.tableauUrl.size();i++) {	//pour chaque url on creer un noed et on relie
-			numberVertex++;
-			Vertex b=new Vertex(this.tableauUrl.get(i));
-			numberEdge++;
-			//la source avec ce nouveau sommet grace à un arc
-			this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b,1,getDomainTitle(this.tableauUrl.get(i)));		
-																				//on ajoute ce nouvel arc dans la list d'arc pour ce sommet source
-			this.listEdge.add(unEdge);
-																		//on ajoute le nouveau sommet dans la liste de sommet
-			this.listVertex.add(b);
-			numberLinkTreated++;
+		if (stayDomain==false) {
+			
+		
+			this.tableauUrl= ps.linksOnPage();
+			//this.tableauUrl=search(this.unVertex.getUrl());
+			//this.tableauUrl=search(this.unVertex.getUrl());		//on rempli tableauUrl avec les liens recuperer
+			this.listVertex.add(this.unVertex);			//on entre dans listSommet le sommet source
+			for (int i=0;i<this.tableauUrl.size();i++) {	//pour chaque url on creer un noed et on relie
+				numberVertex++;
+				Vertex b=new Vertex(this.tableauUrl.get(i));
+				numberEdge++;
+				//la source avec ce nouveau sommet grace à un arc
+				this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b,1,getDomainTitle(this.tableauUrl.get(i)));		
+																					//on ajoute ce nouvel arc dans la list d'arc pour ce sommet source
+				this.listEdge.add(unEdge);
+																			//on ajoute le nouveau sommet dans la liste de sommet
+				this.listVertex.add(b);
+				numberLinkTreated++;
+			}
+			this.listEnsembleVertex.add(this.listVertex);
+																		//apres avoir fait pour tout les urls j'ajoute la liste des 
+																		//sommet a listEnsembleSommet
+			this.listEnsmbleEdge.add(this.listEdge);		//on ajoute la liste d'arc à la list listEnsembleArc
+			
+			this.j++;
+			
 		}
-		this.listEnsembleVertex.add(this.listVertex);
-																	//apres avoir fait pour tout les urls j'ajoute la liste des 
-																	//sommet a listEnsembleSommet
-		this.listEnsmbleEdge.add(this.listEdge);		//on ajoute la liste d'arc à la list listEnsembleArc
-		
-		this.j++;
-		
-		
+		else {
+			this.tableauUrl= ps.linksOnPage();
+			
+			//this.tableauUrl=search(this.unVertex.getUrl());
+			//this.tableauUrl=search(this.unVertex.getUrl());		//on rempli tableauUrl avec les liens recuperer
+			this.listVertex.add(this.unVertex);			//on entre dans listSommet le sommet source
+			for (int i=0;i<this.tableauUrl.size();i++) {	//pour chaque url on creer un noed et on relie
+				
+				String u=getDomainTitle(this.tableauUrl.get(i));
+				if (u==dom) {
+					numberVertex++;
+					Vertex b=new Vertex(this.tableauUrl.get(i));
+					numberEdge++;
+					//la source avec ce nouveau sommet grace à un arc
+					this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b,1,getDomainTitle(this.tableauUrl.get(i)));		
+																						//on ajoute ce nouvel arc dans la list d'arc pour ce sommet source
+					this.listEdge.add(unEdge);
+																				//on ajoute le nouveau sommet dans la liste de sommet
+					this.listVertex.add(b);
+					numberLinkTreated++;
+				}
+				
+			}
+			this.listEnsembleVertex.add(this.listVertex);
+																		//apres avoir fait pour tout les urls j'ajoute la liste des 
+																		//sommet a listEnsembleSommet
+			this.listEnsmbleEdge.add(this.listEdge);		//on ajoute la liste d'arc à la list listEnsembleArc
+			
+			this.j++;
+			
+		}
 	}
 	
 	public boolean unDomain(String url) throws MalformedURLException {
@@ -201,29 +222,6 @@ public class Graph extends Thread{
             return true;
         }
     }
-	
-	/*
-	public void essaiIte(ArrayList<String> ti) {
-		creationNode(ti);
-		for(int i=1; i<this.listEnsembleVertex.get(j-1).size();i++) {
-			Vertex aux=this.listEnsembleVertex.get(j-1).get(i);
-			//System.out.println("aux . url : "+aux.url);
-			if (aux.passed==false) {
-				LinkedList<Vertex> auxA=new LinkedList<Vertex>();
-				this.listVertex=auxA;
-				this.unVertex=aux;
-				creationNode(ti);
-			}
-			else {
-				System.out.println("la ligne : "+(j-1)+" a ete passéee");
-			}
-		}
-	//	System.out.println("fin boucle for ");
-		
-		
-	}
-	*/
-	
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	// CREER L'ARBRE AVEC PLUSIEURS ITERATIONS
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -250,52 +248,7 @@ public class Graph extends Thread{
 		
 	}
 
-	
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------
-	// EXECUTE ET AFFICHE EDGE ET VERTEX
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
-	public void essaiCatch() throws MalformedURLException{
-		//essai(ti);
-		creationGraphEnLargeur();
-		for (int i=0; i<listEnsembleVertex.size();i++) {
-			System.out.println("list size::: "+ listEnsembleVertex.size());
-			System.out.println(listEnsembleVertex.get(i));
-			System.out.println("[");
-			for (int k=0;k<listEnsembleVertex.get(i).size();k++) {
-				Vertex aux=listEnsembleVertex.get(i).get(k);
-				System.out.println(aux.getUrl());
-				//System.out.println("j::: "+(this.j-1));
-			}
-		}
-		//System.out.println("]   j:: "+(this.j-1));
-		
-		System.out.println("arc :::: ");
-		essaiCatchArc();	
-	}
-	
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------
-	// EXECUTE AFFICHE EDGE
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
-	public void essaiCatchArc() throws MalformedURLException {
-		creationGraphEnLargeur();
-		for (int i=0; i<listEnsmbleEdge.get(0).size();i++) {
-			Edge aux=new Edge(listEnsmbleEdge.get(0).get(i).getLink(),listEnsmbleEdge.get(0).get(i).getSource(),listEnsmbleEdge.get(0).get(i).getTarget());
-			//System.out.println("nom de l'arc: "+aux.getLink());
-			System.out.println("source :::"+aux.getSource().getUrl()+":::  num sommet  :::: "+aux.getSource());
-			System.out.println("cible ::::"+aux.getLink()+":::  num sommet ::: "+aux.getTarget());
-			System.out.println("---------------- "+ i );
-		}
-	}
-	
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------
-	// EXECUTE ET AFFICHE EDGE
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------
-			
-	public void graphSite() throws MalformedURLException {
-		essaiCatchArc();
-	}
+
 	
 	
 	
@@ -461,25 +414,6 @@ public class Graph extends Thread{
 
 		
 	
-	
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------
-	// AFFICHER LIST DOMAINE
-	//----------------------------------------------------------------------------------------------------------------------------------------------------------
-	
-	public void afficherListDomain() throws MalformedURLException {
-		createDomainGraph();
-		System.out.println("Liste Domaine : ");
-		System.out.println(this.listDomain);
-		System.out.println("list ensemble edge :"+this.listEnsmbleEdge);
-		System.out.println("size : "+this.listEnsmbleEdge.size());
-		//System.out.println(listEnsmbleEdge.size());
-		for (int i=0; i<listEnsmbleEdge.get(0).size();i++) {
-			Edge aux=new Edge(listEnsmbleEdge.get(0).get(i).getLink(),listEnsmbleEdge.get(0).get(i).getSource(),listEnsmbleEdge.get(0).get(i).getTarget(),listEnsmbleEdge.get(0).get(i).getPonderation(),listEnsmbleEdge.get(0).get(i).getTitle());
-			System.out.println("poids de l'arc: "+aux.getPonderation());
-			System.out.println(aux.getSource().getUrl()+" -> "+aux.getLink()+" -> titre : "+aux.getTitle());
-			System.out.println();
-		}
-	}
 	
 	/*public int getNombreUrl() {
 		return numberLinkTreated;
