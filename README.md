@@ -10,7 +10,6 @@ This software was developed as an assignment during the 2020/21 university year 
 
 
 
-
 ## Organization
 The source code is organized as follows... 
 <list the folders/packages, explain their role>
