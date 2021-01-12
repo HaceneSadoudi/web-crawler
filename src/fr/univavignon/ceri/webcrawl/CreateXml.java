@@ -21,7 +21,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Attr;
 
 
-public class createxml {
+public class CreateXml {
 public static void creaat(Graph graphe, int N) {
 LinkedList<LinkedList<Edge>> auxArc=graphe.listEnsmbleEdge;
 
@@ -33,7 +33,9 @@ Element graphml = gra.createElement("graphml");
 Element key = gra.createElement("key");
 Element key1 = gra.createElement("key");
 Element key2 = gra.createElement("key");
+
 //AJOUT DES ELEMENTS PRIMORDIAL AUX GRAPHE / CONCERNANT LA LECTURE
+
 Attr attrXmlns = gra.createAttribute("xmlns");					
 Attr attrXmlnsXsi = gra.createAttribute("xmlns:xsi");			
 Attr attrXsiSchema = gra.createAttribute("xsi:schemaLocation");	
@@ -61,6 +63,22 @@ key.setAttributeNode(id);
 key.setAttributeNode(attrname);
 key.setAttributeNode(foor);
 key.setAttributeNode(attrtype);
+System.out.println("");
+//POIDS DES SOMMETS
+Attr idD = gra.createAttribute("id");
+Attr foorR = gra.createAttribute("for");
+Attr attrnameE = gra.createAttribute("attr.name");
+Attr attrtypeE = gra.createAttribute("attr.type");
+System.out.println("");
+foorR.setValue("node");
+idD.setNodeValue("d5");
+attrnameE.setNodeValue("weight");
+attrtypeE.setNodeValue("int");
+
+key.setAttributeNode(idD);
+key.setAttributeNode(attrnameE);
+key.setAttributeNode(foorR);
+key.setAttributeNode(attrtypeE);
 System.out.println("");
 //POUR LURL
 
@@ -114,22 +132,30 @@ graphml.appendChild(graph);
 
 for (int i=0;i<auxArc.get(0).size();i++) {
 	Edge ii = auxArc.get(0).get(i);
+	Vertex sommet1= auxArc.get(0).get(i).getSource();
+	//Vertex sommet2= auxArc.get(0).get(i).getTarget();
 	//creation node
 	Element node = gra.createElement("node");								
-	Attr numeroID = gra.createAttribute("id");
-	numeroID.setValue(auxArc.get(0).get(i).getTarget().toString());		
-	node.setAttributeNode(numeroID);
+	Attr nodeNumero = gra.createAttribute("id");
+	nodeNumero.setValue(auxArc.get(0).get(i).getTarget().toString());		
+	node.setAttributeNode(nodeNumero);
 	graph.appendChild(node);
 	Element data1 = gra.createElement("data");
 	Element data2 = gra.createElement("data");
+	Element data3 = gra.createElement("data");
 	Attr keydata1 = gra.createAttribute("key");
 	keydata1.setValue("d0");
 	Attr keydata2 = gra.createAttribute("key");
 	keydata2.setValue("d3");
+	Attr keydata3 = gra.createAttribute("key");
+	keydata3.setValue("d5");
 	data2.setAttributeNode(keydata2);
-	data2.appendChild(gra.createTextNode(ii.getLink()));													
+	data2.appendChild(gra.createTextNode(ii.getLink()));
+	data3.setAttributeNode(keydata3);
+	data3.appendChild(gra.createTextNode(""+sommet1.getWeight()));
 	data1.setAttributeNode(keydata1);
-	data1.appendChild(gra.createTextNode(ii.getTitle()));//pour titre / A CHANGER
+	data1.appendChild(gra.createTextNode(ii.getTitle()));
+	node.appendChild(data3);
 	node.appendChild(data2);
 	node.appendChild(data1);
 	Element edge3 = gra.createElement("edge");				
@@ -152,14 +178,15 @@ for (int i=0;i<auxArc.get(0).size();i++) {
 
 //on ajoute l'element graph dans le document gra
 gra.appendChild(graphml);
-        TransformerFactory transtory = TransformerFactory.newInstance();
-        DOMSource targeet = new DOMSource(gra);
-        Transformer changementexport = transtory.newTransformer();
-        //exporter en graphml
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYYY_MM_dd_HH_mm_ss");
-        LocalDateTime now = LocalDateTime.now();
-        StreamResult graphhml = new StreamResult(new File(dtf.format(now) + "n" +  N + ".graphml"));
-        changementexport.transform(targeet, graphhml);
+TransformerFactory transtory = TransformerFactory.newInstance();
+DOMSource targeet = new DOMSource(gra);
+Transformer changementexport = transtory.newTransformer();
+//exporter en graphml
+DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYYY_MM_dd_HH_mm_ss");
+LocalDateTime now = LocalDateTime.now();
+StreamResult graphhml = new StreamResult(new File(dtf.format(now) + "n" +  N + ".graphml"));
+changementexport.transform(targeet, graphhml);
+
 }
 catch (ParserConfigurationException pce) {
         pce.printStackTrace();
