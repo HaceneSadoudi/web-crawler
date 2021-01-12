@@ -360,10 +360,12 @@ public class Graph extends Thread{
                     if (this.listEdge.get(h).getTitle().compareTo(auxd)==0) {
                         int x = this.listEdge.get(h).getPonderation();
                         x++;
-                        this.listEdge.get(h).setPonderation(x);
-                        int ajoutPonderation = this.unVertex.getWeight();
+						this.listEdge.get(h).setPonderation(x);
+						Vertex auxiliaire = listEdge.get(h).getSource();
+                        
+                        int ajoutPonderation = auxiliaire.getWeigth();
                         ajoutPonderation++;
-                        this.unVertex.setWeight(ajoutPonderation);
+                        auxiliaire.setWeight(ajoutPonderation);
                     }    
                 }
             }
@@ -373,7 +375,7 @@ public class Graph extends Thread{
                     this.listEdge.add(unEdge);
                     this.listVertex.add(this.unVertex);
                     this.listDomain.add(auxd);
-                    this.unVertex.setWeight(1);
+                   // this.unVertex.setWeight(1);
                     numberEdge++;
                 }
                 else {
@@ -382,7 +384,7 @@ public class Graph extends Thread{
                     this.listEdge.add(unEdge);
                     this.listVertex.add(newDomain);
                     this.listDomain.add(auxd);
-                    this.unVertex.setWeight(1);
+                    //this.unVertex.setWeight(1);
                     numberVertex++;
                     numberEdge++;
                 }
