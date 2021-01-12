@@ -88,7 +88,7 @@ public class Graph extends Thread{
 	public void run(){
 		if(modalite.equals("Page")){
 			try {
-				System.out.println(Thread.currentThread().getName());
+				//System.out.println(Thread.currentThread().getName());
 				creationGraphEnLargeur();
 				this.termine = 1;
 				Interface.nb_t--;
@@ -99,7 +99,7 @@ public class Graph extends Thread{
 			}
 		} else {
 			try {
-				System.out.println(Thread.currentThread().getName());
+				//System.out.println(Thread.currentThread().getName());
 				createDomainGraph();
 				this.termine = 1;
 				Interface.nb_t--;
@@ -155,18 +155,19 @@ public class Graph extends Thread{
 			//this.tableauUrl=search(this.unVertex.getUrl());
 			//this.tableauUrl=search(this.unVertex.getUrl());		//on rempli tableauUrl avec les liens recuperer
 			this.listVertex.add(this.unVertex);			//on entre dans listSommet le sommet source
-			for (int i=0;i<this.tableauUrl.size();i++) {	//pour chaque url on creer un noed et on relie
-				numberVertex++;
-				Vertex b=new Vertex(this.tableauUrl.get(i));
-				numberEdge++;
-				//la source avec ce nouveau sommet grace à un arc
-				this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b,1,getDomainTitle(this.tableauUrl.get(i)));		
-																					//on ajoute ce nouvel arc dans la list d'arc pour ce sommet source
-				this.listEdge.add(unEdge);
-																			//on ajoute le nouveau sommet dans la liste de sommet
-				this.listVertex.add(b);
-				numberLinkTreated++;
-			}
+			for (int i=0;i<this.tableauUrl.size();i++) {    //pour chaque url on creer un noed et on relie
+                numberVertex++;
+                Vertex b=new Vertex(this.tableauUrl.get(i));
+                b.setWeight(1);
+                numberEdge++;
+                //la source avec ce nouveau sommet grace à un arc
+                this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b,1,getDomainTitle(this.tableauUrl.get(i)));        
+                //on ajoute ce nouvel arc dans la list d'arc pour ce sommet source
+                this.listEdge.add(unEdge);
+                //on ajoute le nouveau sommet dans la liste de sommet
+                this.listVertex.add(b);
+                numberLinkTreated++;
+            }
 			this.listEnsembleVertex.add(this.listVertex);
 																		//apres avoir fait pour tout les urls j'ajoute la liste des 
 																		//sommet a listEnsembleSommet
@@ -181,24 +182,23 @@ public class Graph extends Thread{
 			//this.tableauUrl=search(this.unVertex.getUrl());
 			//this.tableauUrl=search(this.unVertex.getUrl());		//on rempli tableauUrl avec les liens recuperer
 			this.listVertex.add(this.unVertex);			//on entre dans listSommet le sommet source
-			for (int i=0;i<this.tableauUrl.size();i++) {	//pour chaque url on creer un noed et on relie
-				
-				String u=getDomainTitle(this.tableauUrl.get(i));
-				//if (u==dom) {
-				if(u.compareTo(dom)==0){
-					numberVertex++;
-					Vertex b=new Vertex(this.tableauUrl.get(i));
-					numberEdge++;
-					//la source avec ce nouveau sommet grace à un arc
-					this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b,1,getDomainTitle(this.tableauUrl.get(i)));		
-																						//on ajoute ce nouvel arc dans la list d'arc pour ce sommet source
-					this.listEdge.add(unEdge);
-																				//on ajoute le nouveau sommet dans la liste de sommet
-					this.listVertex.add(b);
-				}
-				numberLinkTreated++;
-				
-			}
+			for (int i=0;i<this.tableauUrl.size();i++) {    //pour chaque url on creer un noed et on relie
+                String u=getDomainTitle(this.tableauUrl.get(i));
+                if (u==dom) {
+                    numberVertex++;
+                    Vertex b=new Vertex(this.tableauUrl.get(i));
+                    b.setWeight(1);
+                    numberEdge++;
+                    //la source avec ce nouveau sommet grace à un arc
+                    this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b,1,getDomainTitle(this.tableauUrl.get(i)));        
+                    //on ajoute ce nouvel arc dans la list d'arc pour ce sommet source
+                    this.listEdge.add(unEdge);
+                    //on ajoute le nouveau sommet dans la liste de sommet
+                    this.listVertex.add(b);
+                    numberLinkTreated++;
+                }
+                
+            }
 			this.listEnsembleVertex.add(this.listVertex);
 																		//apres avoir fait pour tout les urls j'ajoute la liste des 
 																		//sommet a listEnsembleSommet
@@ -215,11 +215,11 @@ public class Graph extends Thread{
         URL b = new URL(url); 
         String domain= b.getHost();
         if (url.length()>domain.length()+8) {
-            System.out.println("page");
+            //System.out.println("page");
             return false;
         }
         else {
-            System.out.println("domaine");
+            //System.out.println("domaine");
             return true;
         }
     }
@@ -240,7 +240,7 @@ public class Graph extends Thread{
 					creationNode();
 				}
 				else {
-					System.out.println("la ligne : "+(j-1)+" a ete passéee");
+					//System.out.println("la ligne : "+(j-1)+" a ete passéee");
 				}
 			}
 		}
@@ -269,7 +269,7 @@ public class Graph extends Thread{
 	public String getDomainTitle(String u) throws MalformedURLException {
 		URL url = new URL(u); 
 		String domain= url.getHost();
-		System.out.println(domain);
+		//System.out.println(domain);
 		int nbr;
 		char c;
 		ArrayList<String> mots=new ArrayList();
@@ -354,36 +354,41 @@ public class Graph extends Thread{
 			String auxd=getDomainTitle(this.tableauUrl.get(i));
 			//System.out.println("domaine : "+ auxd);
 			if (listDomain.contains(auxd)) {
-				//System.out.println("le domaine "+auxd+" est deja dans la liste domaine.");
-				
-				for (int h=0; h<this.listEdge.size();h++) {
-					if (this.listEdge.get(h).getTitle().compareTo(auxd)==0) {
-						int x = this.listEdge.get(h).getPonderation();
-						x++;
-						this.listEdge.get(h).setPonderation(x);
-					}	
-				}
-			}
-			else {
-				if (auxd.compareTo(dom)==0) {
-					this.unEdge = new Edge(tableauUrl.get(i),this.unVertex,this.unVertex,1,auxd);
-					this.listEdge.add(unEdge);
-					this.listVertex.add(this.unVertex);
-					this.listDomain.add(auxd);
-					numberEdge++;
-				}
-				else {
-					Vertex newDomain = new Vertex(tableauUrl.get(i),auxd);
-					this.unEdge = new Edge(tableauUrl.get(i),this.unVertex,newDomain,1,auxd);
-					this.listEdge.add(unEdge);
-					this.listVertex.add(newDomain);
-					this.listDomain.add(auxd);
-					numberVertex++;
-					numberEdge++;
-				}
-			}
-			this.numberLinkTreated++;
-		}
+                //System.out.println("le domaine "+auxd+" est deja dans la liste domaine.");
+                
+                for (int h=0; h<this.listEdge.size();h++) {
+                    if (this.listEdge.get(h).getTitle().compareTo(auxd)==0) {
+                        int x = this.listEdge.get(h).getPonderation();
+                        x++;
+                        this.listEdge.get(h).setPonderation(x);
+                        int ajoutPonderation = this.unVertex.getWeight();
+                        ajoutPonderation++;
+                        this.unVertex.setWeight(ajoutPonderation);
+                    }    
+                }
+            }
+            else {
+                if (auxd.compareTo(dom)==0) {
+                    this.unEdge = new Edge(tableauUrl.get(i),this.unVertex,this.unVertex,1,auxd);
+                    this.listEdge.add(unEdge);
+                    this.listVertex.add(this.unVertex);
+                    this.listDomain.add(auxd);
+                    this.unVertex.setWeight(1);
+                    numberEdge++;
+                }
+                else {
+                    Vertex newDomain = new Vertex(tableauUrl.get(i),auxd);
+                    this.unEdge = new Edge(tableauUrl.get(i),this.unVertex,newDomain,1,auxd);
+                    this.listEdge.add(unEdge);
+                    this.listVertex.add(newDomain);
+                    this.listDomain.add(auxd);
+                    this.unVertex.setWeight(1);
+                    numberVertex++;
+                    numberEdge++;
+                }
+            }
+            this.numberLinkTreated++;
+        }
 		this.listEnsembleVertex.add(this.listVertex);
 		this.listEnsmbleEdge.add(this.listEdge);		
 		this.j++;
@@ -407,7 +412,7 @@ public class Graph extends Thread{
 						getOneIterationOfDomain();
 					}
 					else {
-						System.out.println("la ligne : "+(j-1)+" a ete passéee");
+						//System.out.println("la ligne : "+(j-1)+" a ete passéee");
 					}
 				}
 			}
