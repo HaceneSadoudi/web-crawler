@@ -857,7 +857,7 @@ public class Interface extends Application {
  		//int compteur = 0;
  		
  		for(int i=0; i<liste.getItems().size(); i++){
- 			System.out.println("URL :" + liste.getItems().get(i) + ", mod : " + noeud.getSelectionModel().getSelectedItem());
+ 			//System.out.println("URL :" + liste.getItems().get(i) + ", mod : " + noeud.getSelectionModel().getSelectedItem());
  			try {
 				graphes[i] = new Graph(liste.getItems().get(i),noeud.getSelectionModel().getSelectedItem(), rayon.getValue(), robot.isSelected(), sitemap.isSelected(), domaine.isSelected());
 			} catch (MalformedURLException e) {
