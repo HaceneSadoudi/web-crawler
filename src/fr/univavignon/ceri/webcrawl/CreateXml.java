@@ -132,7 +132,7 @@ graphml.appendChild(graph);
 
 for (int i=0;i<auxArc.get(0).size();i++) {
 	Edge ii = auxArc.get(0).get(i);
-	Vertex sommet1= auxArc.get(0).get(i).getSource();
+	Vertex sommet1= auxArc.get(0).get(i).getTarget();
 	//Vertex sommet2= auxArc.get(0).get(i).getTarget();
 	//creation node
 	Element node = gra.createElement("node");								
