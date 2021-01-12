@@ -81,6 +81,7 @@ public class Graph extends Thread{
 		//on donne au sommet de depart une url
 		this.unVertex=new Vertex(url);
 		//on pose la variable passed à true
+		this.unVertex.setWeight(1);
 		this.unVertex.passed=true;
 		this.dom=getDomainTitle(url);
 	}
