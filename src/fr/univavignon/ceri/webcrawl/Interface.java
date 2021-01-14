@@ -2,7 +2,7 @@ package fr.univavignon.ceri.webcrawl;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -60,13 +60,20 @@ public class Interface extends Application {
 	Label nb_noeuds;
 	Label nb_liens;
 	
+	ListView<String> liste;
+	ComboBox<String> noeud;
+	
+	Graph[] graphes;
+	int nbgraphes;
+	
 	Spinner<Integer> temps_heure, temps_minute, temps_seconde;
 	
 	LineChart chart;
 	XYChart.Series<Integer, Integer> g_noeud;
 	XYChart.Series<Integer, Integer> g_liens;
-	int g_n = 2, g_l = 2, nb_n = 0, nb_l = 0;
-	int nb_t = 0, nb_u = 1;
+	int g_t = 0;
+	int nb_n = 0, nb_l = 0, nb_t = 1, nb_u = 0;
+	int n_elem_n = 0, n_elem_l = 0;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -100,29 +107,29 @@ public class Interface extends Application {
 			
 			// PARTIE 2
 			
-			Button cibles_button2 = new Button("ParamËtres gÈnÈraux");
+			Button cibles_button2 = new Button("Param√®tres g√©n√©raux");
 			cibles_button2.setDisable(true);
 			cibles_button2.setLayoutX(150);
 			cibles_button2.setLayoutY(500);
 			
-			Button param_button2 = new Button("ParamËtres gÈnÈraux");
+			Button param_button2 = new Button("Param√®tres g√©n√©raux");
 			param_button2.setLayoutX(150);
 			param_button2.setLayoutY(500);
 			
 			param_button2.setEffect(enfonce);
 			
-			Button demarrer_button2 = new Button("ParamËtres gÈnÈraux");
+			Button demarrer_button2 = new Button("Param√®tres g√©n√©raux");
 			demarrer_button2.setLayoutX(150);
 			demarrer_button2.setLayoutY(500);
 			
 			// PARTIE 3
 			
-			Button cibles_button3 = new Button("DÈmarrer");
+			Button cibles_button3 = new Button("D√©marrer");
 			cibles_button3.setDisable(true);
 			cibles_button3.setLayoutX(350);
 			cibles_button3.setLayoutY(500);
 			
-			Button param_button3 = new Button("DÈmarrer");
+			Button param_button3 = new Button("D√©marrer");
 			param_button3.setLayoutX(350);
 			param_button3.setLayoutY(500);
 			
@@ -132,7 +139,7 @@ public class Interface extends Application {
 			
 			demarrer_button3.setEffect(enfonce);
 			
-			Button demarrer_button4 = new Button("DÈmarrer");
+			Button demarrer_button4 = new Button("D√©marrer");
 			demarrer_button4.setLayoutX(350);
 			demarrer_button4.setLayoutY(500);
 			demarrer_button4.setVisible(false);
@@ -143,7 +150,7 @@ public class Interface extends Application {
 			
 			// PARTIE 4
 			
-			ListView<String> liste = new ListView<String>();
+			liste = new ListView<String>();
 			liste.setLayoutX(50);
 			liste.setLayoutY(20);
 			
@@ -159,7 +166,7 @@ public class Interface extends Application {
 				input.setHeaderText(null);
 				input.setContentText("Quel est l'URL de la cible ?");
 				Optional<String> url = input.showAndWait();
-				if (url.isPresent()){ // ne rien ajouter si l'utilisateur a cliquÈ sur "Annuler"
+				if (url.isPresent()){ // ne rien ajouter si l'utilisateur a cliqu√© sur "Annuler"
 					int n;
 					boolean unique = true;
 					n = liste.getItems().size();
@@ -183,7 +190,7 @@ public class Interface extends Application {
 							erreur.showAndWait();
 						}
 					} else {
-						erreur.setContentText("Cette cible existe dÈj‡ dans la liste !");
+						erreur.setContentText("Cette cible existe d√©j√† dans la liste !");
 						erreur.showAndWait();
 					}
 					if(cibles_button2.isDisable() && cibles_button3.isDisable()){
@@ -239,7 +246,7 @@ public class Interface extends Application {
 			label_noeud.setLayoutX(50);
 			label_noeud.setLayoutY(20);
 			
-			ComboBox<String> noeud = new ComboBox<String>();
+			noeud = new ComboBox<String>();
 			noeud.getItems().add("Page");
 			noeud.getItems().add("Domaine");
 			noeud.getSelectionModel().selectFirst();
@@ -399,7 +406,7 @@ public class Interface extends Application {
 			
 			// PARTIE 14
 			
-			Label label_remontee = new Label("RemontÈe :");
+			Label label_remontee = new Label("Remont√©e :");
 			label_remontee.setFont(f1);
 			label_remontee.setLayoutX(50);
 			label_remontee.setLayoutY(450);
@@ -417,7 +424,7 @@ public class Interface extends Application {
 				}
 			});
 			
-			// Ajout paramËtres avancÈs
+			// Ajout param√®tres avanc√©s
 			
 			param.getChildren().add(label_noeud);
 			param.getChildren().add(noeud);
@@ -475,7 +482,7 @@ public class Interface extends Application {
 			
 			// PARTIE 16
 			
-			Label label_nb_URL = new Label("Nombre d'URL traitÈs :");
+			Label label_nb_URL = new Label("Nombre d'URL trait√©s :");
 			label_nb_URL.setFont(f1);
 			label_nb_URL.setLayoutX(50);
 			label_nb_URL.setLayoutY(70);
@@ -560,7 +567,7 @@ public class Interface extends Application {
 			popup.setTitle("Graphique");
 			
 			NumberAxis x_temps = new NumberAxis();
-			x_temps.setLabel("temps (en minutes)");
+			x_temps.setLabel("temps (en secondes)");
 
 			NumberAxis y_nombre = new NumberAxis();
 			y_nombre.setLabel("nombre");
@@ -647,7 +654,7 @@ public class Interface extends Application {
 			
 			// PARTIE 20
 			
-			Label label_temps_ecoule = new Label("Temps ÈcoulÈ :");
+			Label label_temps_ecoule = new Label("Temps √©coul√© :");
 			label_temps_ecoule.setFont(f1);
 			label_temps_ecoule.setLayoutX(50);
 			label_temps_ecoule.setLayoutY(330);
@@ -680,7 +687,7 @@ public class Interface extends Application {
 			prog2.setLayoutX(370);
 			prog2.setLayoutY(450);
 			
-			// Ajout dÈmarrer
+			// Ajout d√©marrer
 			
 			demar.getChildren().add(label_nb_threads);
 			demar.getChildren().add(nb_threads);
@@ -738,7 +745,12 @@ public class Interface extends Application {
 				demarrer_button2.setDisable(true);
 				demarrer_button4.setVisible(false);
 				demarrer_button3.setVisible(true);
-				dem();
+				try {
+					dem();
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				prog_num = 0;
 				prog1.setProgress(0);
 				prog2.setProgress(0);
@@ -754,7 +766,12 @@ public class Interface extends Application {
 				demarrer_button2.setDisable(true);
 				demarrer_button4.setVisible(false);
 				demarrer_button3.setVisible(true);
-				dem();
+				try {
+					dem();
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				prog_num = 0;
 				prog1.setProgress(0);
 				prog2.setProgress(0);
@@ -774,6 +791,13 @@ public class Interface extends Application {
 				demarrer_button1.setDisable(false);
 				demarrer_button2.setDisable(false);
 				timer.cancel();
+				for(int i=0; i<nbgraphes; i++) {
+					graphes[i].stop();
+				}
+				createxml c = new createxml();
+				for(int i=0; i<nbgraphes; i++) {
+					c.creaat(graphes[i], i);
+				}
 			});
 			
 			demarrer_button4.setOnAction(e -> {
@@ -781,7 +805,12 @@ public class Interface extends Application {
 				demarrer_button3.setVisible(true);
 				demarrer_button1.setDisable(true);
 				demarrer_button2.setDisable(true);
-				dem();
+				try {
+					dem();
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				prog_num = 0;
 				prog1.setProgress(0);
 				prog2.setProgress(0);
@@ -795,16 +824,28 @@ public class Interface extends Application {
 		}
 	}
 	
-	public void dem(){
-		if(nb_n > 0 && nb_l > 0){
-			for(int i=0; i<nb_n; i++){
+	public void dem() throws MalformedURLException{
+		if(n_elem_n > 0 && n_elem_l > 0){
+			for(int i=0; i<n_elem_n; i++){
 				g_noeud.getData().remove(0);
 			}
-			for(int i=0; i<nb_l; i++){
+			for(int i=0; i<n_elem_l; i++){
 				g_liens.getData().remove(0);
 			}
-			nb_n = nb_l = nb_t = 0;
-			nb_u = 1;
+			n_elem_n = n_elem_l = 0;
+			nb_n = nb_l = nb_t = nb_u = 1;
+			Graph.numberEdge = Graph.numberLinkTreated = Graph.numberVertex = 0;
+			g_t = 0;
+		}
+		
+		nbgraphes = liste.getItems().size();
+		graphes = new Graph[nbgraphes];
+		
+		for(int i=0; i<liste.getItems().size(); i++){
+			System.out.println("URL :" + liste.getItems().get(i) + ", mod : " + noeud.getSelectionModel().getSelectedItem());
+			graphes[i] = new Graph(liste.getItems().get(i),noeud.getSelectionModel().getSelectedItem());
+			nb_t++;
+			graphes[i].start();
 		}
 		
 		control_temps = true;
@@ -851,7 +892,7 @@ public class Interface extends Application {
 								Alert fin = new Alert(AlertType.INFORMATION);
 								fin.setTitle("Fin de recherche");
 								fin.setHeaderText(null);
-								fin.setContentText("Votre recherche est terminÈe !");
+								fin.setContentText("Votre recherche est termin√©e !");
 								fin.showAndWait();
 							} else {
 								sR = sR - 1;
@@ -872,16 +913,16 @@ public class Interface extends Application {
 							prog2.setProgress(f);
 						}
 						
-						g_n = g_n + 1;
-						nb_n = nb_n + 1;
-						g_noeud.getData().add(new XYChart.Data<Integer, Integer>(g_n*2, g_n+1));
+						g_t++;
+						nb_n = Graph.numberVertex;
+						n_elem_n++;
+						g_noeud.getData().add(new XYChart.Data<Integer, Integer>(g_t, nb_n));
 						
-						g_l = g_l + 1;
-						nb_l = nb_l + 1;
-						g_liens.getData().add(new XYChart.Data<Integer, Integer>(g_l+1, g_l*2));
+						nb_l = Graph.numberEdge;
+						n_elem_l++;
+						g_liens.getData().add(new XYChart.Data<Integer, Integer>(g_t, nb_n));
 						
-						nb_t = nb_t + 2;
-						nb_u = nb_u * 2;
+						nb_u = Graph.numberLinkTreated;
 						
 						nb_threads.setText("" + nb_t);
 						nb_URL.setText("" + nb_u);
