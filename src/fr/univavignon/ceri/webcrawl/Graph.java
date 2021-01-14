@@ -1,7 +1,15 @@
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> refs/remotes/origin/feature/graph
 package fr.univavignon.ceri.webcrawl;
 
 import java.util.LinkedList;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/origin/feature/graph
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,6 +44,7 @@ public class Graph extends Thread{
 	int j=0;
 	
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
+<<<<<<< HEAD
 	//element nombre
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	
@@ -44,19 +53,30 @@ public class Graph extends Thread{
 	public static int numberLinkTreated = 0;
 	public static int numberVertex = 0;
 	public static int numberEdge = 0;
+=======
+	//element Domain
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	int numberLinkTreated =0;
+>>>>>>> refs/remotes/origin/feature/graph
 	
 	
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 // CONSTRUCTEUR
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 			
+<<<<<<< HEAD
 	public Graph(String url, String mod) throws MalformedURLException {
 		this.modalite = mod;
+=======
+	public Graph(String url ) throws MalformedURLException {
+>>>>>>> refs/remotes/origin/feature/graph
 		//on donne au sommet de depart une url
 		this.unVertex=new Vertex(url);
 		//on pose la variable passed à true
 		this.unVertex.passed=true;
 		this.dom=getDomainTitle(url);
+<<<<<<< HEAD
 	}
 	
 	public void run(){
@@ -78,6 +98,10 @@ public class Graph extends Thread{
 			}
 		}
 	}
+=======
+	}
+
+>>>>>>> refs/remotes/origin/feature/graph
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 //pour tester la fonciton
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -101,7 +125,11 @@ public class Graph extends Thread{
 	//CREER ARBRE POUR UN NOEUD
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	
+<<<<<<< HEAD
 	public void creationNode() throws MalformedURLException {
+=======
+	public void creationNode(ArrayList<String> ti) throws MalformedURLException {
+>>>>>>> refs/remotes/origin/feature/graph
 		//essaie du parseur 
 		Parser ps = new Parser(this.unVertex.getUrl(), true, true);
 		this.tableauUrl= ps.linksOnPage();
@@ -109,16 +137,24 @@ public class Graph extends Thread{
 		//this.tableauUrl=search(this.unVertex.getUrl());		//on rempli tableauUrl avec les liens recuperer
 		this.listVertex.add(this.unVertex);			//on entre dans listSommet le sommet source
 		for (int i=0;i<this.tableauUrl.size();i++) {	//pour chaque url on creer un noed et on relie
+<<<<<<< HEAD
 			numberVertex++;
 			Vertex b=new Vertex(this.tableauUrl.get(i));
 			numberEdge++;
 			//la source avec ce nouveau sommet grace à un arc
+=======
+			Vertex b=new Vertex(this.tableauUrl.get(i));		//la source avec ce nouveau sommet grace à un arc
+>>>>>>> refs/remotes/origin/feature/graph
 			this.unEdge=new Edge(this.tableauUrl.get(i),this.unVertex,b,1,getDomainTitle(this.tableauUrl.get(i)));		
 																				//on ajoute ce nouvel arc dans la list d'arc pour ce sommet source
 			this.listEdge.add(unEdge);
 																		//on ajoute le nouveau sommet dans la liste de sommet
 			this.listVertex.add(b);
+<<<<<<< HEAD
 			numberLinkTreated++;
+=======
+			this.numberLinkTreated++;
+>>>>>>> refs/remotes/origin/feature/graph
 		}
 		this.listEnsembleVertex.add(this.listVertex);
 																	//apres avoir fait pour tout les urls j'ajoute la liste des 
@@ -156,8 +192,13 @@ public class Graph extends Thread{
 	// CREER L'ARBRE AVEC PLUSIEURS ITERATIONS
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
+<<<<<<< HEAD
 	public void creationGraphEnLargeur() throws MalformedURLException {
 		creationNode();
+=======
+	public void creationGraphEnLargeur(ArrayList<String> ti) throws MalformedURLException {
+		creationNode(ti);
+>>>>>>> refs/remotes/origin/feature/graph
 		for (int l=0;l<2;l++) {
 			for(int i=1; i<listEnsembleVertex.get(l).size();i++) {
 				Vertex aux=listEnsembleVertex.get(l).get(i);
@@ -166,7 +207,11 @@ public class Graph extends Thread{
 					LinkedList<Vertex> auxA=new LinkedList<Vertex>();
 					this.listVertex=auxA;
 					this.unVertex=aux;
+<<<<<<< HEAD
 					creationNode();
+=======
+					creationNode(ti);
+>>>>>>> refs/remotes/origin/feature/graph
 				}
 				else {
 					System.out.println("la ligne : "+(j-1)+" a ete passéee");
@@ -183,9 +228,15 @@ public class Graph extends Thread{
 	// EXECUTE ET AFFICHE EDGE ET VERTEX
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
+<<<<<<< HEAD
 	public void essaiCatch() throws MalformedURLException{
 		//essai(ti);
 		creationGraphEnLargeur();
+=======
+	public void essaiCatch(ArrayList<String> ti) throws MalformedURLException{
+		//essai(ti);
+		creationGraphEnLargeur(ti);
+>>>>>>> refs/remotes/origin/feature/graph
 		for (int i=0; i<listEnsembleVertex.size();i++) {
 			System.out.println("list size::: "+ listEnsembleVertex.size());
 			System.out.println(listEnsembleVertex.get(i));
@@ -206,8 +257,13 @@ public class Graph extends Thread{
 	// EXECUTE AFFICHE EDGE
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
+<<<<<<< HEAD
 	public void essaiCatchArc() throws MalformedURLException {
 		creationGraphEnLargeur();
+=======
+	public void essaiCatchArc(ArrayList<String> ti) throws MalformedURLException {
+		creationGraphEnLargeur(ti);
+>>>>>>> refs/remotes/origin/feature/graph
 		for (int i=0; i<listEnsmbleEdge.get(0).size();i++) {
 			Edge aux=new Edge(listEnsmbleEdge.get(0).get(i).getLink(),listEnsmbleEdge.get(0).get(i).getSource(),listEnsmbleEdge.get(0).get(i).getTarget());
 			//System.out.println("nom de l'arc: "+aux.getLink());
@@ -221,8 +277,13 @@ public class Graph extends Thread{
 	// EXECUTE ET AFFICHE EDGE
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 			
+<<<<<<< HEAD
 	public void graphSite() throws MalformedURLException {
 		essaiCatchArc();
+=======
+	public void graphSite(ArrayList<String> ti) throws MalformedURLException {
+		essaiCatchArc(ti);
+>>>>>>> refs/remotes/origin/feature/graph
 	}
 	
 	
@@ -244,6 +305,7 @@ public class Graph extends Thread{
 		URL url = new URL(u); 
 		String domain= url.getHost();
 		System.out.println(domain);
+<<<<<<< HEAD
 		int nbr;
 		char c;
 		ArrayList<String> mots=new ArrayList();
@@ -290,13 +352,33 @@ public class Graph extends Thread{
 				
 			}
 		}	
+=======
+		// domain.startsWith("www.") ? domain.substring(4) : domain;
+		//email .substring(email .indexOf("@") + 1);
+		if (domain.startsWith("www.")) {
+			String a = domain.substring(4);
+			a= a.substring(0,a.indexOf("."));
+			//System.out.println("domaine : "+ a);
+			return a; 
+		}
+		else {
+			String a= domain.substring(0,domain.indexOf("."));
+			//System.out.println("domaine : "+ a);
+			//System.out.println("domaine : "+ domain);
+			return a;
+		}
+>>>>>>> refs/remotes/origin/feature/graph
 	}
 	 
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	// FAIT ARBRE DOMAINE POUR UNE ITÉRATION
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 			
+<<<<<<< HEAD
 	public void getOneIterationOfDomain() throws MalformedURLException {
+=======
+	public void getOneIterationOfDomain(ArrayList<String> ti) throws MalformedURLException {
+>>>>>>> refs/remotes/origin/feature/graph
 		//this.tableauUrl = search(this.unVertex.getUrl());
 		Parser ps = new Parser(this.unVertex.getUrl(),true , true);
 		this.tableauUrl= ps.linksOnPage();
@@ -323,7 +405,10 @@ public class Graph extends Thread{
 					this.listEdge.add(unEdge);
 					this.listVertex.add(this.unVertex);
 					this.listDomain.add(auxd);
+<<<<<<< HEAD
 					numberEdge++;
+=======
+>>>>>>> refs/remotes/origin/feature/graph
 				}
 				else {
 					Vertex newDomain = new Vertex(tableauUrl.get(i),auxd);
@@ -331,8 +416,11 @@ public class Graph extends Thread{
 					this.listEdge.add(unEdge);
 					this.listVertex.add(newDomain);
 					this.listDomain.add(auxd);
+<<<<<<< HEAD
 					numberVertex++;
 					numberEdge++;
+=======
+>>>>>>> refs/remotes/origin/feature/graph
 				}
 			}
 			this.numberLinkTreated++;
@@ -347,8 +435,13 @@ public class Graph extends Thread{
 	// CREER L'ARBRE DES DOMAINES AVEC PLUSIEURS ITERATIONS
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 			
+<<<<<<< HEAD
 		public void createDomainGraph() throws MalformedURLException {
 			getOneIterationOfDomain();
+=======
+		public void createDomainGraph(ArrayList<String> ti) throws MalformedURLException {
+			getOneIterationOfDomain(ti);
+>>>>>>> refs/remotes/origin/feature/graph
 			for (int l=0;l<2;l++) {
 
 				for(int i=1; i<listEnsembleVertex.get(0).size();i++) {
@@ -357,7 +450,11 @@ public class Graph extends Thread{
 						LinkedList<Vertex> auxA=new LinkedList<Vertex>();
 						this.listVertex=auxA;
 						this.unVertex=aux;
+<<<<<<< HEAD
 						getOneIterationOfDomain();
+=======
+						getOneIterationOfDomain(ti);
+>>>>>>> refs/remotes/origin/feature/graph
 					}
 					else {
 						System.out.println("la ligne : "+(j-1)+" a ete passéee");
@@ -367,14 +464,26 @@ public class Graph extends Thread{
 		}
 
 		
+<<<<<<< HEAD
 	
+=======
+>>>>>>> refs/remotes/origin/feature/graph
 	
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	// AFFICHER LIST DOMAINE
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	
+<<<<<<< HEAD
 	public void afficherListDomain() throws MalformedURLException {
 		createDomainGraph();
+=======
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------
+	// AFFICHER LIST DOMAINE
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	public void afficherListDomain(ArrayList<String> ti) throws MalformedURLException {
+		createDomainGraph(ti);
+>>>>>>> refs/remotes/origin/feature/graph
 		System.out.println("Liste Domaine : ");
 		System.out.println(this.listDomain);
 		System.out.println("list ensemble edge :"+this.listEnsmbleEdge);
@@ -392,9 +501,12 @@ public class Graph extends Thread{
 		return numberLinkTreated;
 	}
 	
+<<<<<<< HEAD
 	public int getNombreNoeud() {
 		return numberVertex;
 	}
+=======
+>>>>>>> refs/remotes/origin/feature/graph
 	
 	public int getNombreLien() {
 		return numberEdge;
