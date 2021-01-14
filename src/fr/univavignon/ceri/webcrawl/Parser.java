@@ -32,7 +32,8 @@ import java.util.regex.Pattern;
 
 public class Parser {
 
-
+	// TODO
+	// Variables declaration
 	private String url;
 	private String body;
 	private boolean respectSitemap;
@@ -102,7 +103,7 @@ public class Parser {
 		int end = contentToLower.indexOf("</title>");
 		title = content.substring(begin, end).trim();
 		title = title.substring(title.indexOf('>') + 1, title.length());
-		//System.out.println(title);
+		System.out.println(title);
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
@@ -195,7 +196,7 @@ public class Parser {
 					while (globalMatcher.find() && !recursive) 
 					{	
 						urls.add(globalMatcher.group(1));
-						Graph.numberLinkFound++;
+						this.nbrLinks++;
 					
 					}
 				}
@@ -226,14 +227,14 @@ public class Parser {
 					{
 						currentHref = this.url.split("//")[0] + m.group(1);
 						result.add(currentHref);						
-						Graph.numberLinkFound++;
+						this.nbrLinks++;
 					} else 
 					{
 						try 
 						{
 							new URL(currentHref);
 							result.add(m.group(1));
-							Graph.numberLinkFound++;
+							this.nbrLinks++;
 						} 
 						catch (MalformedURLException malformedURLException) 
 						{
@@ -241,11 +242,11 @@ public class Parser {
 							try {
 								url = new URL(new URL(this.url), currentHref);
 								result.add(url.toString());
-								Graph.numberLinkFound++;
+								this.nbrLinks++;
 							} 
 							catch (MalformedURLException e1) 
 							{
-
+								// TODO
 							}
 						}
 					}
@@ -261,7 +262,7 @@ public class Parser {
 		Set<String> set = new HashSet<>(result);
 		result.clear();
 		result.addAll(set);
-		Graph.numberLinkFound = result.size();
+		this.nbrLinks = result.size();
 		if (this.respectRobot) {
 			ArrayList<String> linksInRobotsTxt = new ArrayList<String>();
 			linksInRobotsTxt = this.linksOnRobotsTxt();
@@ -273,7 +274,7 @@ public class Parser {
 					if (value.matches(link1))
 					{
 				        iterator.remove();
-						Graph.numberLinkFound--;
+						this.nbrLinks--;
 					}
 				}
 			}
