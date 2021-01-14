@@ -1,8 +1,8 @@
-
 package fr.univavignon.ceri.webcrawl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -12,7 +12,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +35,8 @@ public class Parser {
 
 	private String url;
 	private String body;
+	private boolean respectSitemap;
+	private boolean respectRobot;
 	public String bodyRobotsTxt;
 	
 	private ArrayList<String> sitemapUrls;
@@ -40,8 +45,16 @@ public class Parser {
 	public static boolean NORESPECT_ROBOT_TXT = false;
 	public static boolean RESPECT_SITEMAP = true;
 	public static boolean NORESPECT_SITEMAP = false;
+	public int nbrLinks = 0;
 
+	public String getUrl()
+	{
+		return this.url;
+	}
+	
 	public Parser(String _url, boolean robottxt, boolean sitemap) {
+		this.respectRobot = robottxt;
+		this.respectSitemap = sitemap;
 		this.url = _url;
 		String content = null;
 		String contentRobotsTxt = null;
@@ -58,7 +71,6 @@ public class Parser {
 			
 			String urlRobotsTxt = url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2];
 			urlRobotsTxt += "/robots.txt";
-			System.out.println(urlRobotsTxt);
 			HttpRequest request1 = HttpRequest.newBuilder()
 					.uri(URI.create(urlRobotsTxt))
 					.GET().build();
@@ -68,7 +80,6 @@ public class Parser {
 		}
 		this.body = content;
 		this.bodyRobotsTxt = contentRobotsTxt;
-		
 	}
 
 	static public String getTitle(String url)
@@ -89,16 +100,30 @@ public class Parser {
 		String contentToLower = content.toLowerCase();
 		int begin = contentToLower.indexOf("<title") + 7;
 		int end = contentToLower.indexOf("</title>");
-		//System.out.println(begin + " " + end);
 		title = content.substring(begin, end).trim();
 		title = title.substring(title.indexOf('>') + 1, title.length());
-		System.out.println(title);
+		//System.out.println(title);
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
 		return title;
 	}
 
+	public ArrayList<String> getSitemapsFromRobotDotTxt(){
+		ArrayList<String> urls = new ArrayList<String>();
+		String[] lines =  this.bodyRobotsTxt.split("\n");
+		for (String line : lines)
+		{
+			if (line.indexOf("Sitemap:") != -1)
+			{
+				line = line.split(" ")[1];
+				urls.add(line);
+			}
+		}
+		return urls;
+
+	}
+	
 	public ArrayList<String> linksOnRobotsTxt(){
 		ArrayList<String> urls = new ArrayList<String>();
 		String[] lines =  this.bodyRobotsTxt.split("\n");
@@ -121,12 +146,69 @@ public class Parser {
 				line = line.replace("Disallow: ", "");
 				line = url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2] + line;
 				urls.add(line);
-				System.out.println(line);
 			}
 		}
 		return urls;
 
 	}
+	
+	public ArrayList<String> linksOnSiteMap(String url, boolean isSiteMapLink){
+		ArrayList<String> urls = new ArrayList<String>();
+		ArrayList<String> urlSiteMap = new ArrayList<String>();
+		boolean recursive = false;
+		try {			
+			HttpClient client = HttpClient.newBuilder()
+					.connectTimeout(Duration.ofSeconds(20))
+					.followRedirects(Redirect.ALWAYS)
+					.build();
+			if (!isSiteMapLink)
+			{
+				urlSiteMap.add(url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2]);
+				urlSiteMap.set(0, urlSiteMap.get(0) + "/sitemap.xml");
+				urlSiteMap.addAll(this.getSitemapsFromRobotDotTxt());
+			}
+			else
+				urlSiteMap.add(url);
+			Set<String> set = new HashSet<>(urlSiteMap);
+			urlSiteMap.clear();
+			urlSiteMap.addAll(set);
+			for (String url1 : urlSiteMap)
+			{
+				HttpRequest request1 = HttpRequest.newBuilder()
+						.setHeader("User-Agent", "Googlebot")
+						.uri(URI.create(url1))
+						.GET().build();
+				HttpResponse<String> response1 = client.send(request1, HttpResponse.BodyHandlers.ofString());
+				String globalRegex = "<loc>(.*?)</loc>";
+				Pattern globalPattern = Pattern.compile(globalRegex, Pattern.CASE_INSENSITIVE);
+				Matcher globalMatcher = globalPattern.matcher(response1.body());
+				if (response1.body().indexOf("</sitemapindex>") != -1)
+				{
+					recursive = true;
+					while (globalMatcher.find()) 
+					{
+						urls.addAll(this.linksOnSiteMap(globalMatcher.group(1), true));
+					}
+				}
+				else
+				{
+					while (globalMatcher.find() && !recursive) 
+					{	
+						urls.add(globalMatcher.group(1));
+						Graph.numberLinkFound++;
+					
+					}
+				}
+			}
+			
+		} catch (Exception e)
+		{
+			System.out.println(e);
+		}
+		return urls;
+
+	}
+	
 	public ArrayList<String> linksOnPage() {
 		ArrayList<String> result = new ArrayList<String>();
 		String globalRegex = "<a (.*?)</a>";
@@ -143,13 +225,15 @@ public class Parser {
 					if (currentHref.length() >= 2 && currentHref.substring(0, 2).equals("//")) 
 					{
 						currentHref = this.url.split("//")[0] + m.group(1);
-						result.add(currentHref);
+						result.add(currentHref);						
+						Graph.numberLinkFound++;
 					} else 
 					{
 						try 
 						{
 							new URL(currentHref);
 							result.add(m.group(1));
+							Graph.numberLinkFound++;
 						} 
 						catch (MalformedURLException malformedURLException) 
 						{
@@ -157,6 +241,7 @@ public class Parser {
 							try {
 								url = new URL(new URL(this.url), currentHref);
 								result.add(url.toString());
+								Graph.numberLinkFound++;
 							} 
 							catch (MalformedURLException e1) 
 							{
@@ -169,6 +254,30 @@ public class Parser {
 			}
 		}
 
+		if (this.respectSitemap) 
+		{
+			result.addAll(this.linksOnSiteMap(this.url, false));
+		}
+		Set<String> set = new HashSet<>(result);
+		result.clear();
+		result.addAll(set);
+		Graph.numberLinkFound = result.size();
+		if (this.respectRobot) {
+			ArrayList<String> linksInRobotsTxt = new ArrayList<String>();
+			linksInRobotsTxt = this.linksOnRobotsTxt();
+			for (Iterator<String> iterator = result.iterator(); iterator.hasNext(); ) {
+			    String value = iterator.next();
+				for (String linkInRobotsTxt : linksInRobotsTxt)
+				{
+					String link1 = linkInRobotsTxt.replace("*", "(.*)");
+					if (value.matches(link1))
+					{
+				        iterator.remove();
+						Graph.numberLinkFound--;
+					}
+				}
+			}
+		}
 		return result;
 	}
 	
