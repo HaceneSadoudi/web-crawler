@@ -1,12 +1,8 @@
-
 package fr.univavignon.ceri.webcrawl;
 
 import java.io.IOException;
 import java.io.InputStream;
-<<<<<<< HEAD
 import java.net.HttpURLConnection;
-=======
->>>>>>> refs/remotes/origin/feature/graph
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -16,14 +12,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
-=======
-import java.util.Scanner;
->>>>>>> refs/remotes/origin/feature/graph
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,11 +36,8 @@ public class Parser {
 	// Variables declaration
 	private String url;
 	private String body;
-<<<<<<< HEAD
 	private boolean respectSitemap;
 	private boolean respectRobot;
-=======
->>>>>>> refs/remotes/origin/feature/graph
 	public String bodyRobotsTxt;
 	
 	private ArrayList<String> sitemapUrls;
@@ -57,7 +46,6 @@ public class Parser {
 	public static boolean NORESPECT_ROBOT_TXT = false;
 	public static boolean RESPECT_SITEMAP = true;
 	public static boolean NORESPECT_SITEMAP = false;
-<<<<<<< HEAD
 	public int nbrLinks = 0;
 
 	public String getUrl()
@@ -68,10 +56,6 @@ public class Parser {
 	public Parser(String _url, boolean robottxt, boolean sitemap) {
 		this.respectRobot = robottxt;
 		this.respectSitemap = sitemap;
-=======
-
-	public Parser(String _url, boolean robottxt, boolean sitemap) {
->>>>>>> refs/remotes/origin/feature/graph
 		this.url = _url;
 		String content = null;
 		String contentRobotsTxt = null;
@@ -87,7 +71,6 @@ public class Parser {
 			content = response.body();
 			
 			String urlRobotsTxt = url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2];
-<<<<<<< HEAD
 			urlRobotsTxt += "/robots.txt";
 			HttpRequest request1 = HttpRequest.newBuilder()
 					.uri(URI.create(urlRobotsTxt))
@@ -98,26 +81,6 @@ public class Parser {
 		}
 		this.body = content;
 		this.bodyRobotsTxt = contentRobotsTxt;
-=======
-			//urlRobotsTxt += "/robots.txt";
-			//System.out.println(urlRobotsTxt);
-			HttpRequest request1 = HttpRequest.newBuilder()
-					.uri(URI.create(urlRobotsTxt))
-					.GET().build();
-			// Recuperation de la reponse pour la stocker dans une variable locale
-			HttpResponse<String> response1 = client.send(request1, HttpResponse.BodyHandlers.ofString());
-			// Stockage du contenu de la page web dans la variable content
-			contentRobotsTxt = response1.body();
-		} catch (Exception ex) {
-			//ex.printStackTrace();
-		}
-		this.body = content;
-		this.bodyRobotsTxt = contentRobotsTxt;
-		
-		// remplacement des retours a la ligne par des espaces pour
-		// utiliser les expressions regulieres qui vont reconnaitre les liens
-		// content = content.replace("\n", " ").replace("\n\r", " ");
->>>>>>> refs/remotes/origin/feature/graph
 	}
 
 	static public String getTitle(String url)
@@ -138,23 +101,15 @@ public class Parser {
 		String contentToLower = content.toLowerCase();
 		int begin = contentToLower.indexOf("<title") + 7;
 		int end = contentToLower.indexOf("</title>");
-<<<<<<< HEAD
-		title = content.substring(begin, end).trim();
-		title = title.substring(title.indexOf('>') + 1, title.length());
-		System.out.println(title);
-=======
-		//System.out.println(begin + " " + end);
 		title = content.substring(begin, end).trim();
 		title = title.substring(title.indexOf('>') + 1, title.length());
 		//System.out.println(title);
->>>>>>> refs/remotes/origin/feature/graph
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
 		return title;
 	}
 
-<<<<<<< HEAD
 	public ArrayList<String> getSitemapsFromRobotDotTxt(){
 		ArrayList<String> urls = new ArrayList<String>();
 		String[] lines =  this.bodyRobotsTxt.split("\n");
@@ -170,8 +125,6 @@ public class Parser {
 
 	}
 	
-=======
->>>>>>> refs/remotes/origin/feature/graph
 	public ArrayList<String> linksOnRobotsTxt(){
 		ArrayList<String> urls = new ArrayList<String>();
 		String[] lines =  this.bodyRobotsTxt.split("\n");
@@ -194,16 +147,11 @@ public class Parser {
 				line = line.replace("Disallow: ", "");
 				line = url.split("/")[0] + "//" + url.split("/")[1] + url.split("/")[2] + line;
 				urls.add(line);
-<<<<<<< HEAD
-=======
-				//System.out.println(line);
->>>>>>> refs/remotes/origin/feature/graph
 			}
 		}
 		return urls;
 
 	}
-<<<<<<< HEAD
 	
 	public ArrayList<String> linksOnSiteMap(String url, boolean isSiteMapLink){
 		ArrayList<String> urls = new ArrayList<String>();
@@ -248,7 +196,7 @@ public class Parser {
 					while (globalMatcher.find() && !recursive) 
 					{	
 						urls.add(globalMatcher.group(1));
-						this.nbrLinks++;
+						Graph.numberLinkFound++;
 					
 					}
 				}
@@ -262,8 +210,6 @@ public class Parser {
 
 	}
 	
-=======
->>>>>>> refs/remotes/origin/feature/graph
 	public ArrayList<String> linksOnPage() {
 		ArrayList<String> result = new ArrayList<String>();
 		String globalRegex = "<a (.*?)</a>";
@@ -281,14 +227,14 @@ public class Parser {
 					{
 						currentHref = this.url.split("//")[0] + m.group(1);
 						result.add(currentHref);						
-						this.nbrLinks++;
+						Graph.numberLinkFound++;
 					} else 
 					{
 						try 
 						{
 							new URL(currentHref);
 							result.add(m.group(1));
-							this.nbrLinks++;
+							Graph.numberLinkFound++;
 						} 
 						catch (MalformedURLException malformedURLException) 
 						{
@@ -296,7 +242,7 @@ public class Parser {
 							try {
 								url = new URL(new URL(this.url), currentHref);
 								result.add(url.toString());
-								this.nbrLinks++;
+								Graph.numberLinkFound++;
 							} 
 							catch (MalformedURLException e1) 
 							{
@@ -316,7 +262,7 @@ public class Parser {
 		Set<String> set = new HashSet<>(result);
 		result.clear();
 		result.addAll(set);
-		this.nbrLinks = result.size();
+		Graph.numberLinkFound = result.size();
 		if (this.respectRobot) {
 			ArrayList<String> linksInRobotsTxt = new ArrayList<String>();
 			linksInRobotsTxt = this.linksOnRobotsTxt();
@@ -328,7 +274,7 @@ public class Parser {
 					if (value.matches(link1))
 					{
 				        iterator.remove();
-						this.nbrLinks--;
+						Graph.numberLinkFound--;
 					}
 				}
 			}
