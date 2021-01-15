@@ -26,10 +26,10 @@ import java.util.regex.Pattern;
  * This class is used to parse a web page.
  * 
  * linksOnpage() 					:Returns an array list of String contains all URLs
- * getUrl()							:Returns url
- * Parser()							:Parser constructor
+ * getUrl()						:Returns url
+ * Parser()						:Parser constructor
  * getTitle()						:Return webpage title
- * getSitemapsFromRobotDotTxt()		:Extracts Sitemaps from Robots.txt file
+ * getSitemapsFromRobotDotTxt()				:Extracts Sitemaps from Robots.txt file
  * linksOnRobotsTxt()				:Extracts links from a webpage
  * linksOnSitemap()					:Extracts links from sitemap file
  * linksOnRobots()					:Extracts links from Robots.txt file
