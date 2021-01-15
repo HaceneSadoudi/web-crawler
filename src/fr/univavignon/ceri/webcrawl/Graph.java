@@ -364,7 +364,7 @@ public class Graph extends Thread{
 						this.listEdge.get(h).setPonderation(x);
 
 						Vertex auxiliaire = this.listEdge.get(h).getTarget();
-                        int ajoutPonderation = auxiliaire.getWeigth();
+                        int ajoutPonderation = auxiliaire.getWeight();
                         ajoutPonderation++;
                         auxiliaire.setWeight(ajoutPonderation);
                     }    
@@ -436,3 +436,4 @@ public class Graph extends Thread{
 		return numberEdge;
 	}*/
 
+}
