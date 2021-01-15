@@ -33,6 +33,7 @@ Element graphml = gra.createElement("graphml");
 Element key = gra.createElement("key");
 Element key1 = gra.createElement("key");
 Element key2 = gra.createElement("key");
+Element key4 = gra.createElement("key");
 
 //AJOUT DES ELEMENTS PRIMORDIAL AUX GRAPHE / CONCERNANT LA LECTURE
 
@@ -59,10 +60,10 @@ id.setNodeValue("d0");
 attrname.setNodeValue("titre");
 attrtype.setNodeValue("string");
 
-key.setAttributeNode(id);
-key.setAttributeNode(attrname);
-key.setAttributeNode(foor);
-key.setAttributeNode(attrtype);
+key4.setAttributeNode(id);
+key4.setAttributeNode(attrname);
+key4.setAttributeNode(foor);
+key4.setAttributeNode(attrtype);
 System.out.println("");
 //POIDS DES SOMMETS
 Attr idD = gra.createAttribute("id");
@@ -126,6 +127,7 @@ edgeG.setValue("undirected");
 graph.setAttributeNode(idG);		
 graph.setAttributeNode(edgeG);
 graphml.appendChild(key);
+graphml.appendChild(key4);
 graphml.appendChild(key1);
 graphml.appendChild(key2);
 graphml.appendChild(graph);
