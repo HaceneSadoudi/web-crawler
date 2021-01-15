@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * Parser()						:Parser constructor
  * getTitle()						:Return webpage title
  * getSitemapsFromRobotDotTxt()				:Extracts Sitemaps from Robots.txt file
- * linksOnRobotsTxt()				:Extracts links from a webpage
+ * linksOnRobotsTxt()						:Extracts links from a webpage
  * linksOnSitemap()					:Extracts links from sitemap file
  * linksOnRobots()					:Extracts links from Robots.txt file
  */
