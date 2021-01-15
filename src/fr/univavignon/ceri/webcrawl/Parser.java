@@ -21,38 +21,60 @@ import java.util.regex.Pattern;
 
 
 /**
- * This class is used to parse a web page.
- * 
- * linksOnpage function return an array list of String contains all URLs
- * 
  * @author Abdelhakim RASFI
  * 
+ * This class is used to parse a web page.
+ * 
+ * linksOnpage() 					:Returns an array list of String contains all URLs
+ * getUrl()							:Returns url
+ * Parser()							:Parser constructor
+ * getTitle()						:Return webpage title
+ * getSitemapsFromRobotDotTxt()		:Extracts Sitemaps from Robots.txt file
+ * linksOnRobotsTxt()				:Extracts links from a webpage
+ * linksOnSitemap()					:Extracts links from sitemap file
+ * linksOnRobots()					:Extracts links from Robots.txt file
  */
 
 
 public class Parser {
 
-	// TODO
-	// Variables declaration
+	/*
+	*Declaration des attributs
+	*/
 	private String url;
 	private String body;
 	private boolean respectSitemap;
 	private boolean respectRobot;
 	public String bodyRobotsTxt;
-	
 	private ArrayList<String> sitemapUrls;
-	
+	/**
+	 *  des attribut statiques pour le traitement des fichiers (robots.txt et sitemap.xml)
+	 */
 	public static boolean RESPECT_ROBOT_TXT = true;
 	public static boolean NORESPECT_ROBOT_TXT = false;
 	public static boolean RESPECT_SITEMAP = true;
 	public static boolean NORESPECT_SITEMAP = false;
 	public int nbrLinks = 0;
 
+	/**
+	 *  retourne l'attribut privé url de classe Parser  
+	 * 
+	 * @param void
+	 * @return String
+	 */
 	public String getUrl()
 	{
 		return this.url;
 	}
 	
+	/**
+	 *  contructeur du parser
+	 * 
+	 * @param _url
+	 * @param robottxt
+	 * @param sitemap
+	 * @return Parser
+	 */
 	public Parser(String _url, boolean robottxt, boolean sitemap) {
 		this.respectRobot = robottxt;
 		this.respectSitemap = sitemap;
@@ -83,6 +105,13 @@ public class Parser {
 		this.bodyRobotsTxt = contentRobotsTxt;
 	}
 
+	/**
+	 *  retourne le titre d'un lien passé parametre 
+	 * 
+	 * @param url
+	 * @return String
+	 *	
+	 */
 	static public String getTitle(String url)
 	{
 		String content = null;
@@ -103,13 +132,20 @@ public class Parser {
 		int end = contentToLower.indexOf("</title>");
 		title = content.substring(begin, end).trim();
 		title = title.substring(title.indexOf('>') + 1, title.length());
-		//System.out.println(title);
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
 		return title;
 	}
 
+	/**
+	 *  retourne une liste des fichiers sitemaps dans le fichier robots.txt 
+	 * 
+	 * @param void
+	 * @see Parser#url
+	 * @return ArrayList<String> de tous les fichiers sitemaps contenus dans le fichier robots.txt
+	 *	
+	 */
 	public ArrayList<String> getSitemapsFromRobotDotTxt(){
 		ArrayList<String> urls = new ArrayList<String>();
 		String[] lines =  this.bodyRobotsTxt.split("\n");
@@ -125,6 +161,15 @@ public class Parser {
 
 	}
 	
+	/**
+	 *  retourne une liste des liens contenus dans le fichier robots.txt 
+	 * 
+	 * @param void
+	 * @see Parser#bodyRobotsTxt
+	 * @return ArrayList<String> 
+	 *							liste de tous les liens listés dans le bloc 'user-agent:'' du fichier robots.txt
+	 *	
+	 */
 	public ArrayList<String> linksOnRobotsTxt(){
 		ArrayList<String> urls = new ArrayList<String>();
 		String[] lines =  this.bodyRobotsTxt.split("\n");
@@ -152,7 +197,19 @@ public class Parser {
 		return urls;
 
 	}
-	
+
+	/**
+	 *  retourne une liste des liens contenus dans un fichier sitemap.xml 
+	 * 
+	 * @param url
+	 * @param isSiteMapLink
+	 *						true	: le fichier sitemap.xml contient des sous fichier sitemap.xml
+	 *						false	: le fichier sitemap.xml contient des liens des pages web.
+	 * @return ArrayList<String> 
+	 *							liste de tous les liens contenus dans fichier sitemap.xml
+	 *	
+	 */
+
 	public ArrayList<String> linksOnSiteMap(String url, boolean isSiteMapLink){
 		ArrayList<String> urls = new ArrayList<String>();
 		ArrayList<String> urlSiteMap = new ArrayList<String>();
@@ -210,6 +267,21 @@ public class Parser {
 
 	}
 	
+	/**
+	 *  retourne une liste des liens contenus dans une page web
+	 * 
+	 * @param void
+	 * @param isSiteMapLink
+	 *						true	: le fichier sitemap.xml contient des sous fichier sitemap.xml
+	 *						false	: le fichier sitemap.xml contient des liens des pages web.
+	 * @return ArrayList<String> 
+	 *							liste de tous les liens contenus dans une page web
+	 * @see Parser#linksOnRobotsTxt()
+	 * @see Parser#body
+	 * @see Parser#url
+	 * @see Parser#respectSitemap
+	 * @see Parser#respectRobotTxT
+	 */
 	public ArrayList<String> linksOnPage() {
 		ArrayList<String> result = new ArrayList<String>();
 		String globalRegex = "<a (.*?)</a>";
