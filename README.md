@@ -4,9 +4,10 @@ A web crawler can be used to browse the World Wide Web, typically for the purpos
 
 This software was developed as an assignment during the 2020/21 university year at the CERI, Avignon University (France), by the following students:
 * Abdelhakim RASFI
-* Author 2
-* Author 3
-* Author 4
+* Hacene SADOUDI
+* Youssef ABIDAR
+* imane HACEN
+* Mohamed Kharchouf 
 
 
 
